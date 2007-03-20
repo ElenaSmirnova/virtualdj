@@ -1,0 +1,22 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+This document show current view of the project.
+
+
+= Details =
+
+Project has 3 parts.
+  * *audio codec*
+  * *audio transformations*
+      ** reverberation
+      ** distortion
+      ** echo
+      ** filter
+      ** "-"
+  * *GUI*
+
+
+
+

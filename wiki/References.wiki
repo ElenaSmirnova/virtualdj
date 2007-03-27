@@ -1,7 +1,9 @@
 #summary Useful references.
 
-List of useful references:
-  * C/C++ [http://www.codenet.ru/cat/Languages/C-CPP/]
+List of the references:
+  * *C/C++* [http://www.codenet.ru/cat/Languages/C-CPP/]
+  * *C* [http://www.codenet.ru/progr/cpp/]
+
 
 
 

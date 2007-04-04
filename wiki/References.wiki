@@ -4,6 +4,7 @@ List of the references:
   * *C/C++* [http://www.codenet.ru/cat/Languages/C-CPP/]
   * *C* [http://www.codenet.ru/progr/cpp/]
   * *Стиль кодирования* [http://local.joelonsoftware.com/mediawiki/index.php/Как_заставить_неправильный_код_выглядеть_неправильно]
+  * *Стиль кодирования* [http://www.codenet.ru/cat/Languages/C-CPP/Style/]
 
 
 

@@ -6,7 +6,7 @@ List of the references:
   * *Стиль кодирования* [http://local.joelonsoftware.com/mediawiki/index.php/Как_заставить_неправильный_код_выглядеть_неправильно]
   * *Стиль кодирования* [http://www.codenet.ru/cat/Languages/C-CPP/Style/]
   * *Справочник MSDN* [http://msdn.microsoft.com/library/rus/]
-
+  * *Работа с библиотеками динамической компоновки DLL* [http://megalib.com/books/329/LESSON9/Index.html]
 
 
 

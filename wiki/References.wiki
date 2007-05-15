@@ -8,5 +8,13 @@ List of the references:
   * *Справочник MSDN* [http://msdn.microsoft.com/library/rus/]
   * *Работа с библиотеками динамической компоновки DLL* [http://megalib.com/books/329/LESSON9/Index.html]
 
+Как пользоваться google SVN
+  * *Поставить себе какой-нибудь плагин, чтобы работать в Винде в графическом интерфейсе* [http://subversion.tigris.org/links.html#clients]
+  * *Полезные команды* [http://svnbook.red-bean.com/nightly/ru/svn.tour.initial.html]
+ 
+
+
+
+
 
 

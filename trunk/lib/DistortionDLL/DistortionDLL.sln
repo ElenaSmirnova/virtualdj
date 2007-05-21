@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DistortionDLL", "DistortionDLL\DistortionDLL.vcproj", "{9B8D712D-BC27-4FEC-9D15-54390FAD5332}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DistortionLib", "..\DistortionLib\DistortionLib.vcproj", "{A79CCC0E-5CEB-48CB-92B6-A8F941AE2E98}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B8D712D-BC27-4FEC-9D15-54390FAD5332}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9B8D712D-BC27-4FEC-9D15-54390FAD5332}.Debug|Win32.Build.0 = Debug|Win32
+		{9B8D712D-BC27-4FEC-9D15-54390FAD5332}.Release|Win32.ActiveCfg = Release|Win32
+		{9B8D712D-BC27-4FEC-9D15-54390FAD5332}.Release|Win32.Build.0 = Release|Win32
+		{A79CCC0E-5CEB-48CB-92B6-A8F941AE2E98}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A79CCC0E-5CEB-48CB-92B6-A8F941AE2E98}.Debug|Win32.Build.0 = Debug|Win32
+		{A79CCC0E-5CEB-48CB-92B6-A8F941AE2E98}.Release|Win32.ActiveCfg = Release|Win32
+		{A79CCC0E-5CEB-48CB-92B6-A8F941AE2E98}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

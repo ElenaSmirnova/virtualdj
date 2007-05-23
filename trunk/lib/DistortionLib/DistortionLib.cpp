@@ -10,7 +10,7 @@ using namespace std;
 #define column 16 //16384
 #define canal 2
 
-int (*mainDistortion)(int highLimit, int lowLimit, volatile int **buffer, int length, int canals);
+int (*mainDistortion)(int highLimit, int lowLimit, volatile int **buffer, int canals, int length);
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -22,7 +22,7 @@ int _tmain(int argc, _TCHAR* argv[])
       return 1;
     }
 
-	mainDistortion =(int (*) (int highLimit, int lowLimit, volatile int **buffer, int length, int canals))GetProcAddress(h,"mainDistortion");
+	mainDistortion =(int (*) (int highLimit, int lowLimit, volatile int **buffer, int canals, int length))GetProcAddress(h,"mainDistortion");
 	if (!mainDistortion)
     {
       printf("Ошибка! В EffectsDLL отсутствует ф-ция mainDistortion\n");
@@ -45,7 +45,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << "\n";
 	}
 
-	if (0 == mainDistortion(0,0,(volatile int **)bufferFromUser,column,canal)){
+	if (0 == mainDistortion(0,0,(volatile int **)bufferFromUser,canal,column)){
 		cout << "\n after distortion \n\n";
 		for (int i=0; i<canal; i++){
 			for (int j = 0; j < column; j++){

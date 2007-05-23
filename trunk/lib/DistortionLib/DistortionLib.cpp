@@ -7,49 +7,48 @@
 #include <iostream>
 using namespace std;
 
-#define columns 16 //16384
+#define column 16 //16384
+#define canal 2
 
-// мне не нравится, что columns описывается два раза. это может привести к ошибке...
-
-int (*mainDistortion)(int highLimit, int lowLimit, volatile int buffer[][columns]);
+int (*mainDistortion)(int highLimit, int lowLimit, volatile int **buffer, int length, int canals);
 
 int _tmain(int argc, _TCHAR* argv[])
 {
 	HINSTANCE h;
-	h=LoadLibrary(L"DistortionDLL");
+	h=LoadLibrary(L"EffectsDLL");
 	if (!h)
     {
-      printf("Ошибка - не могу найти DistortionDLL.dll\n");
+      printf("Ошибка - не могу найти EffectsDLL.dll\n");
       return 1;
     }
 
-	mainDistortion =(int (*) (int highLimit, int lowLimit, volatile int buffer[][columns]))GetProcAddress(h,"mainDistortion");
+	mainDistortion =(int (*) (int highLimit, int lowLimit, volatile int **buffer, int length, int canals))GetProcAddress(h,"mainDistortion");
 	if (!mainDistortion)
     {
-      printf("Ошибка! В DistortionDLL отсутствует ф-ция mainDistortion\n");
+      printf("Ошибка! В EffectsDLL отсутствует ф-ция mainDistortion\n");
       return 1;
     }
 
 
 
-	int bufferFromUser[2][columns];
+	int bufferFromUser[canal][column];
 
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < columns; j++){
+	for (int i = 0; i < canal; i++)
+		for (int j = 0; j < column; j++){
 			bufferFromUser[i][j] = - RAND_MAX/2 + rand();
 		}
 
-	for (int i=0; i<2; i++){
-		for (int j = 0; j < columns; j++){
+	for (int i=0; i<canal; i++){
+		for (int j = 0; j < column; j++){
 			cout << bufferFromUser[i][j] << " ";
 		}
 		cout << "\n";
 	}
 
-	if (0 == mainDistortion(0,0,bufferFromUser)){
+	if (0 == mainDistortion(0,0,(volatile int **)bufferFromUser,column,canal)){
 		cout << "\n after distortion \n\n";
-		for (int i=0; i<2; i++){
-			for (int j = 0; j < columns; j++){
+		for (int i=0; i<canal; i++){
+			for (int j = 0; j < column; j++){
 				cout << bufferFromUser[i][j] << " ";
 			}
 			cout << "\n";

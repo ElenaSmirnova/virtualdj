@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CallLibrary", "CallLibrary\CallLibrary.vcproj", "{3E1936A5-F2D5-4FAB-ACEC-0D348784ACBA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EffectsDLL", "..\EffectsDLL\EffectsDLL.vcproj", "{9AE625E4-D19C-402D-BE1C-D700A80DE3DC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E1936A5-F2D5-4FAB-ACEC-0D348784ACBA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3E1936A5-F2D5-4FAB-ACEC-0D348784ACBA}.Debug|Win32.Build.0 = Debug|Win32
+		{3E1936A5-F2D5-4FAB-ACEC-0D348784ACBA}.Release|Win32.ActiveCfg = Release|Win32
+		{3E1936A5-F2D5-4FAB-ACEC-0D348784ACBA}.Release|Win32.Build.0 = Release|Win32
+		{9AE625E4-D19C-402D-BE1C-D700A80DE3DC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9AE625E4-D19C-402D-BE1C-D700A80DE3DC}.Debug|Win32.Build.0 = Debug|Win32
+		{9AE625E4-D19C-402D-BE1C-D700A80DE3DC}.Release|Win32.ActiveCfg = Release|Win32
+		{9AE625E4-D19C-402D-BE1C-D700A80DE3DC}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

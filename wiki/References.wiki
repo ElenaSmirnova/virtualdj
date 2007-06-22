@@ -15,6 +15,12 @@ List of the references:
 Как использовать скины в visual Studio
   * *MSDN* [http://msdn2.microsoft.com/en-us/library/ms228828(VS.80).aspx]
 
+Описание формата wav
+  * *Обзор* [http://www.iworld.ru/magazine/index.phtml?do=show_article&p=94686178]
+  * *описание1* [http://public.uic.rsu.ru/~skritski/scourses/WebTutor/Sound/sound.htm#WAVE]
+  * *описание2* [http://www.codenet.ru/progr/formt/rawsam.php]
+
+
 
 
 

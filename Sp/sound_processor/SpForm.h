@@ -82,6 +82,7 @@ namespace sound_processor {
 			this->BUTTON_OPEN->TabIndex = 0;
 			this->BUTTON_OPEN->Text = L"Open";
 			this->BUTTON_OPEN->UseVisualStyleBackColor = true;
+			this->BUTTON_OPEN->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_OPEN_Click);
 			// 
 			// BUTTON_CONVERT
 			// 
@@ -91,6 +92,7 @@ namespace sound_processor {
 			this->BUTTON_CONVERT->TabIndex = 1;
 			this->BUTTON_CONVERT->Text = L"Convert";
 			this->BUTTON_CONVERT->UseVisualStyleBackColor = true;
+			this->BUTTON_CONVERT->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_CONVERT_Click);
 			// 
 			// BUTTON_PREVIEW
 			// 
@@ -100,6 +102,7 @@ namespace sound_processor {
 			this->BUTTON_PREVIEW->TabIndex = 2;
 			this->BUTTON_PREVIEW->Text = L"Preview";
 			this->BUTTON_PREVIEW->UseVisualStyleBackColor = true;
+			this->BUTTON_PREVIEW->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_PREVIEW_Click);
 			// 
 			// COMPOBOX_EFFECTS
 			// 
@@ -139,5 +142,14 @@ namespace sound_processor {
 #pragma endregion
 	private: System::Void SpForm_Load(System::Object^  sender, System::EventArgs^  e) {
 			 }
+private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->LABELSTATE->Text = L"Open...";
+		 }
+private: System::Void BUTTON_CONVERT_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->LABELSTATE->Text = L"Convert...";
+		 }
+private: System::Void BUTTON_PREVIEW_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->LABELSTATE->Text = L"Preview...";
+		 }
 };
 }

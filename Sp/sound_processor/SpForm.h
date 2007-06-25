@@ -41,6 +41,18 @@ namespace sound_processor {
 				delete components;
 			}
 		}
+	private: System::Windows::Forms::Button^  BUTTON_OPEN;
+	private: System::Windows::Forms::Button^  BUTTON_CONVERT;
+	private: System::Windows::Forms::Button^  BUTTON_PREVIEW;
+	private: System::Windows::Forms::ComboBox^  COMPOBOX_EFFECTS;
+	private: System::Windows::Forms::Label^  LABELSTATE;
+	protected: 
+
+	protected: 
+
+
+
+
 
 	private:
 		/// <summary>
@@ -55,19 +67,77 @@ namespace sound_processor {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-            this->SuspendLayout();
-            // 
-            // SpForm
-            // 
-            this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
-            this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-            this->ClientSize = System::Drawing::Size(292, 273);
-            this->Name = L"SpForm";
-            this->Text = L"Sound Processor";
-            this->ResumeLayout(false);
+			this->BUTTON_OPEN = (gcnew System::Windows::Forms::Button());
+			this->BUTTON_CONVERT = (gcnew System::Windows::Forms::Button());
+			this->BUTTON_PREVIEW = (gcnew System::Windows::Forms::Button());
+			this->COMPOBOX_EFFECTS = (gcnew System::Windows::Forms::ComboBox());
+			this->LABELSTATE = (gcnew System::Windows::Forms::Label());
+			this->SuspendLayout();
+			// 
+			// BUTTON_OPEN
+			// 
+			this->BUTTON_OPEN->Location = System::Drawing::Point(12, 35);
+			this->BUTTON_OPEN->Name = L"BUTTON_OPEN";
+			this->BUTTON_OPEN->Size = System::Drawing::Size(75, 23);
+			this->BUTTON_OPEN->TabIndex = 0;
+			this->BUTTON_OPEN->Text = L"Open";
+			this->BUTTON_OPEN->UseVisualStyleBackColor = true;
+			// 
+			// BUTTON_CONVERT
+			// 
+			this->BUTTON_CONVERT->Location = System::Drawing::Point(193, 35);
+			this->BUTTON_CONVERT->Name = L"BUTTON_CONVERT";
+			this->BUTTON_CONVERT->Size = System::Drawing::Size(75, 23);
+			this->BUTTON_CONVERT->TabIndex = 1;
+			this->BUTTON_CONVERT->Text = L"Convert";
+			this->BUTTON_CONVERT->UseVisualStyleBackColor = true;
+			// 
+			// BUTTON_PREVIEW
+			// 
+			this->BUTTON_PREVIEW->Location = System::Drawing::Point(193, 135);
+			this->BUTTON_PREVIEW->Name = L"BUTTON_PREVIEW";
+			this->BUTTON_PREVIEW->Size = System::Drawing::Size(75, 23);
+			this->BUTTON_PREVIEW->TabIndex = 2;
+			this->BUTTON_PREVIEW->Text = L"Preview";
+			this->BUTTON_PREVIEW->UseVisualStyleBackColor = true;
+			// 
+			// COMPOBOX_EFFECTS
+			// 
+			this->COMPOBOX_EFFECTS->FormattingEnabled = true;
+			this->COMPOBOX_EFFECTS->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Echo (int buffer[CANALS][LENGTH], float coefficient, bool flagOfFirstUse, int mem" 
+				L"oryBuffer[CANALS][LENGTH])", 
+				L"Distortion (int highLimit, int lowLimit, int buffer[CANALS][LENGTH])"});
+			this->COMPOBOX_EFFECTS->Location = System::Drawing::Point(12, 135);
+			this->COMPOBOX_EFFECTS->Name = L"COMPOBOX_EFFECTS";
+			this->COMPOBOX_EFFECTS->Size = System::Drawing::Size(121, 21);
+			this->COMPOBOX_EFFECTS->TabIndex = 3;
+			// 
+			// LABELSTATE
+			// 
+			this->LABELSTATE->Location = System::Drawing::Point(3, 255);
+			this->LABELSTATE->Name = L"LABELSTATE";
+			this->LABELSTATE->Size = System::Drawing::Size(241, 19);
+			this->LABELSTATE->TabIndex = 4;
+			this->LABELSTATE->Text = L"String of state";
+			// 
+			// SpForm
+			// 
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->ClientSize = System::Drawing::Size(292, 273);
+			this->Controls->Add(this->LABELSTATE);
+			this->Controls->Add(this->COMPOBOX_EFFECTS);
+			this->Controls->Add(this->BUTTON_PREVIEW);
+			this->Controls->Add(this->BUTTON_CONVERT);
+			this->Controls->Add(this->BUTTON_OPEN);
+			this->Name = L"SpForm";
+			this->Text = L"Sound Processor";
+			this->Load += gcnew System::EventHandler(this, &SpForm::SpForm_Load);
+			this->ResumeLayout(false);
 
-        }
+		}
 #pragma endregion
-	};
+	private: System::Void SpForm_Load(System::Object^  sender, System::EventArgs^  e) {
+			 }
+};
 }
-

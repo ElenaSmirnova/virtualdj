@@ -94,7 +94,7 @@ namespace sound_processor {
 			// 
 			// BUTTON_CONVERT
 			// 
-			this->BUTTON_CONVERT->Location = System::Drawing::Point(205, 145);
+			this->BUTTON_CONVERT->Location = System::Drawing::Point(205, 152);
 			this->BUTTON_CONVERT->Name = L"BUTTON_CONVERT";
 			this->BUTTON_CONVERT->Size = System::Drawing::Size(75, 23);
 			this->BUTTON_CONVERT->TabIndex = 1;
@@ -104,7 +104,7 @@ namespace sound_processor {
 			// 
 			// BUTTON_PREVIEW
 			// 
-			this->BUTTON_PREVIEW->Location = System::Drawing::Point(205, 93);
+			this->BUTTON_PREVIEW->Location = System::Drawing::Point(205, 95);
 			this->BUTTON_PREVIEW->Name = L"BUTTON_PREVIEW";
 			this->BUTTON_PREVIEW->Size = System::Drawing::Size(75, 23);
 			this->BUTTON_PREVIEW->TabIndex = 2;
@@ -126,7 +126,7 @@ namespace sound_processor {
 			// 
 			this->LABELSTATE->BackColor = System::Drawing::SystemColors::ButtonFace;
 			this->LABELSTATE->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
-			this->LABELSTATE->Location = System::Drawing::Point(0, 255);
+			this->LABELSTATE->Location = System::Drawing::Point(0, 196);
 			this->LABELSTATE->Name = L"LABELSTATE";
 			this->LABELSTATE->Size = System::Drawing::Size(292, 18);
 			this->LABELSTATE->TabIndex = 4;
@@ -135,7 +135,7 @@ namespace sound_processor {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(292, 273);
+			this->ClientSize = System::Drawing::Size(292, 213);
 			this->Controls->Add(this->LABELSTATE);
 			this->Controls->Add(this->COMPOBOX_EFFECTS);
 			this->Controls->Add(this->BUTTON_PREVIEW);
@@ -149,21 +149,23 @@ namespace sound_processor {
 		}
 #pragma endregion
 private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventArgs^  e) {
-			 using namespace System;
-			 this->OPENFILEDIALOG->ShowDialog();
-			 String^ fileName = this->OPENFILEDIALOG->FileName;
-			 fileName = fileName->Remove( 0, fileName->LastIndexOf('\\')+1 );
-			 String^ outputString = String::Concat("Open ",fileName);
-			 outputString = String::Concat(outputString,"...");
+			 this->LABELSTATE->Text = L"";
+			 String^ outputString ="";
+			 if (this->OPENFILEDIALOG->ShowDialog() == Windows::Forms::DialogResult::OK){
+				String^ fileName = this->OPENFILEDIALOG->FileName;
+				fileName = fileName->Remove( 0, fileName->LastIndexOf('\\')+1 );
+				outputString = String::Concat("Open ",fileName);
+			 }
 			 this->LABELSTATE->Text = outputString;
 		 }
 private: System::Void BUTTON_CONVERT_Click(System::Object^  sender, System::EventArgs^  e) {
-			 this->LABELSTATE->Text = L"Convert...\n";
-			 this->SAVEFILEDIALOG->ShowDialog();
-			 String^ fileName = this->SAVEFILEDIALOG->FileName;
-			 fileName = fileName->Remove(0,fileName->LastIndexOf('\\')+1 );
-			 String^ outputString = String::Concat("Save to ",fileName);
-			 outputString = String::Concat(outputString,"...");
+			 this->LABELSTATE->Text = L"Convert...";
+			 String^ outputString = "";
+			 if (this->SAVEFILEDIALOG->ShowDialog() == Windows::Forms::DialogResult::OK){
+				 String^ fileName = this->SAVEFILEDIALOG->FileName;
+				 fileName = fileName->Remove(0,fileName->LastIndexOf('\\')+1 );
+				 outputString = String::Concat("Save as ",fileName);
+			 }
 			 this->LABELSTATE->Text = outputString;
 		 }
 private: System::Void BUTTON_PREVIEW_Click(System::Object^  sender, System::EventArgs^  e) {

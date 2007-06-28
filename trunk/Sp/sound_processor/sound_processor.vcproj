@@ -238,6 +238,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Skin"
+			>
+			<File
+				RelativePath=".\Sound_processor_Down.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sound_processor_Mask.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Sound_processor_skin.xml"
+				>
+			</File>
+			<File
+				RelativePath=".\Sound_processor_Up.bmp"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>

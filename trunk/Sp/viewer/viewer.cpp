@@ -21,5 +21,3 @@ extern "C" __declspec(dllexport) void view(view_parameters* parameters)
 #ifdef _MANAGED
 #pragma managed(pop)
 #endif
-
-

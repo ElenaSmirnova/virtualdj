@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="sound_effects_test"
 	ProjectGUID="{D4EDBEA8-10DD-4DF9-BAD5-DB6CFB9F8564}"
 	RootNamespace="sound_effects_test"

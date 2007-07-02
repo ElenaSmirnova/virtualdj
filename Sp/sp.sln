@@ -24,6 +24,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "viewer_test", "viewer_test\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sound_processor", "sound_processor\sound_processor.vcproj", "{FCAF9B02-2719-4422-8E4E-176C0FB4B485}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test1", "test1\test1.vcproj", "{423F6B97-3EB9-4E86-949F-A8D4FD45A75C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -58,6 +60,10 @@ Global
 		{FCAF9B02-2719-4422-8E4E-176C0FB4B485}.Debug|Win32.Build.0 = Debug|Win32
 		{FCAF9B02-2719-4422-8E4E-176C0FB4B485}.Release|Win32.ActiveCfg = Release|Win32
 		{FCAF9B02-2719-4422-8E4E-176C0FB4B485}.Release|Win32.Build.0 = Release|Win32
+		{423F6B97-3EB9-4E86-949F-A8D4FD45A75C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{423F6B97-3EB9-4E86-949F-A8D4FD45A75C}.Debug|Win32.Build.0 = Debug|Win32
+		{423F6B97-3EB9-4E86-949F-A8D4FD45A75C}.Release|Win32.ActiveCfg = Release|Win32
+		{423F6B97-3EB9-4E86-949F-A8D4FD45A75C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -166,6 +166,15 @@ namespace test1 {
 			//
 		}
 
+		void pagePaint(Object^ /*sender*/, System::Windows::Forms::PaintEventArgs^ e)
+		{
+			Graphics^ g = e->Graphics;     
+			g->DrawString( "This is a diagonal line drawn on the control",
+			gcnew System::Drawing::Font( "Arial",10 ), System::Drawing::Brushes::Blue, Point(30,30) );
+ 			g->DrawLine( System::Drawing::Pens::Red, tabPage[1]->Left, tabPage[1]->Top,
+			tabPage[1]->Right, tabPage[1]->Bottom );
+		}
+
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
@@ -223,6 +232,7 @@ namespace test1 {
 			// 
 			for(i = 0; i < n; i++)
 			{
+				this->tabPage[i]->Paint += gcnew System::Windows::Forms::PaintEventHandler( this, &Form1::pagePaint );
 				this->tabControl1->Controls->Add(this->tabPage[i]);
 			};
 			this->tabControl1->Location = System::Drawing::Point(80, 83);
@@ -240,7 +250,6 @@ namespace test1 {
 			this->tabPage[i]->Text = "myTab "+ (char)(i+1);
 			this->tabPage[i]->UseVisualStyleBackColor = true;
 			this->tabPage[i]->Click += gcnew System::EventHandler(this, &Form1::tabPage1_Click);
-			
 			};
 			
 			
@@ -259,6 +268,10 @@ namespace test1 {
 #pragma endregion
 	private: System::Void tabPage1_Click(System::Object^  sender, System::EventArgs^  e) {
 			 }
+private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void Form1_Load_1(System::Object^  sender, System::EventArgs^  e) {
+		 }
 };
 }
 

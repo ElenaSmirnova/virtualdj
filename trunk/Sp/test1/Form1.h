@@ -44,6 +44,8 @@ namespace test1 {
 			for (int j = 1; j <= 5; j++)
 			{			
 				g->FillEllipse(System::Drawing::Brushes::Black, System::Drawing::Rectangle(j+k,a[j-1],4,4));
+				if(j == 5) break;
+				g->DrawLine(System::Drawing::Pens::Black, j+k,a[j-1], (j+1)+k+15, a[j]);
 				k = k+15;
 			}
 			

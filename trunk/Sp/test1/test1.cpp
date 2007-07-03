@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 #include "Form1.h"
-#define n 5
+#define n 2
 
 using namespace test1;
 

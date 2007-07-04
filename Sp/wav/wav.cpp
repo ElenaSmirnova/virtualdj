@@ -11,19 +11,16 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpRese
 }
 
 //TODO:
-extern "C" __declspec(dllexport) void read(read_parameters* parameters)
+extern "C" __declspec(dllexport) void read(char* name)
 {
- char* name1="I:\\virtualdj\\Sp\\sound\\fire.wav";
-	char *name;
-	int i;
-	i=0;
+	int i = 0;
 	printf("enter name of .wav file\n");
 	printf("Hello world!\n");
 	FILE * f;
 	TitleWave tw;
 	
-	f=fopen(name1,"r");
-	if ( f==0 ) { printf("Cannot open file - %s\n",name1); return; }
+	f=fopen(name,"r");
+	if ( f==0 ) { printf("Cannot open file - %s\n",name); return; }
 	fread(&tw,sizeof(TitleWave),1,f);
 	fclose(f);
 	printf("LEN RIFF\t - %ld\n", tw.len_riff );

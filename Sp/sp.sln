@@ -23,6 +23,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "viewer_test", "viewer_test\
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sound_processor", "sound_processor\sound_processor.vcproj", "{FCAF9B02-2719-4422-8E4E-176C0FB4B485}"
+	ProjectSection(ProjectDependencies) = postProject
+		{60A73AE8-AF45-4BE2-89E8-A62E6825BF14} = {60A73AE8-AF45-4BE2-89E8-A62E6825BF14}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test1", "test1\test1.vcproj", "{423F6B97-3EB9-4E86-949F-A8D4FD45A75C}"
 EndProject

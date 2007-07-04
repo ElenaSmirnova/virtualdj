@@ -1,5 +1,7 @@
 #pragma once
+#include <stdio.h>
 #include <stdlib.h>
+#include <vcclr.h>
 #include "resource.h"
 
 namespace sound_processor {
@@ -81,6 +83,9 @@ namespace sound_processor {
 			this->OPENFILEDIALOG = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->SAVEFILEDIALOG = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->LABELSTATE = (gcnew System::Windows::Forms::Label());
+
+			//видимо, тут надо добавить Visual Styles
+
 			this->SuspendLayout();
 			// 
 			// BUTTON_OPEN
@@ -152,21 +157,31 @@ namespace sound_processor {
 private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventArgs^  e) {
 			 this->LABELSTATE->Text = L"";
 			 String^ outputString ="";
-			 if (this->OPENFILEDIALOG->ShowDialog() == Windows::Forms::DialogResult::OK){
-				String^ fileName = this->OPENFILEDIALOG->FileName;
+			 if (this->OPENFILEDIALOG->ShowDialog() == Windows::Forms::DialogResult::OK){ //если нажали Открыть
+				String^ fileName = this->OPENFILEDIALOG->FileName; //получение имени файла, который надо открыть
+
+				//перевод System::String в char*
+				pin_ptr<const wchar_t> wch = PtrToStringChars(fileName);
+				size_t convertedChars = 0;
+				errno_t err = 0;
 				size_t  sizeInBytes = ((fileName->Length + 1) * 2);
 			    char* NameOfTheOpenedFile = (char *)malloc(sizeInBytes);
-				//вызов процедуры read(char* name) из wav.cpp
+				err = wcstombs_s(&convertedChars, 
+                    NameOfTheOpenedFile, sizeInBytes,
+                    wch, sizeInBytes);
+
+				read(NameOfTheOpenedFile);
 				fileName = fileName->Remove( 0, fileName->LastIndexOf('\\')+1 );
 				outputString = String::Concat("Open ",fileName);
 			 }
 			 this->LABELSTATE->Text = outputString;
 		 }
 private: System::Void BUTTON_CONVERT_Click(System::Object^  sender, System::EventArgs^  e) {
+			 //вызов функции, отвечающей за конвертирование
 			 this->LABELSTATE->Text = L"Convert...";
 			 String^ outputString = "";
-			 if (this->SAVEFILEDIALOG->ShowDialog() == Windows::Forms::DialogResult::OK){
-				 String^ fileName = this->SAVEFILEDIALOG->FileName;
+			 if (this->SAVEFILEDIALOG->ShowDialog() == Windows::Forms::DialogResult::OK){ //если нажади Сохранить
+				 String^ fileName = this->SAVEFILEDIALOG->FileName; //получение имени файла, куда сохранять
 				 fileName = fileName->Remove(0,fileName->LastIndexOf('\\')+1 );
 				 outputString = String::Concat("Save as ",fileName);
 			 }

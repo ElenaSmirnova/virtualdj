@@ -1,7 +1,6 @@
 #pragma once
-#include < stdio.h >
-#include < stdlib.h >
-#include < vcclr.h >
+#include <stdlib.h>
+#include "resource.h"
 
 namespace sound_processor {
 
@@ -82,13 +81,6 @@ namespace sound_processor {
 			this->OPENFILEDIALOG = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->SAVEFILEDIALOG = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->LABELSTATE = (gcnew System::Windows::Forms::Label());
-			HTHEME hTheme;
-			hTheme = OpenThemeData( SpForm::Handle, L"button");
-			if (!hTheme) // If the handle cannot be retrieved, 
-						 // go back to non-visual style drawing
-						 // code.
-			{
-			}
 			this->SuspendLayout();
 			// 
 			// BUTTON_OPEN

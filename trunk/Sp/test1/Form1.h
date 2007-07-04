@@ -1,7 +1,7 @@
 
 #pragma once
-
-
+const int m = 6;
+const int t = 13;
 namespace test1 {
 
 	using namespace System;
@@ -34,21 +34,38 @@ namespace test1 {
 			//
 		}
 
-		void pagePaint(Object^ /*sender*/, System::Windows::Forms::PaintEventArgs^ e)
+		void pagePaint(Object^ /*sender*/, PaintEventArgs^ e)
 		{
 			Graphics^ g = e->Graphics;     
 			//g->DrawLine( System::Drawing::Pens::Black, Point(30,30), Point(40,30));
 			
 			a[0] = 40; a[1] = 36; a[2] = 56; a[3] = 45; a[4] = 80;
 			int k = 0;
-			for (int j = 1; j <= 5; j++)
-			{			
-				g->FillEllipse(System::Drawing::Brushes::Black, System::Drawing::Rectangle(j+k,a[j-1],4,4));
-				if(j == 5) break;
-				g->DrawLine(System::Drawing::Pens::Black, j+k,a[j-1], (j+1)+k+15, a[j]);
+			int w,h;
+			Rectangle rect = e->ClipRectangle;
+			w = rect.Width;
+			h = rect.Height;
+			g->FillRectangle(Brushes::White, 0, 0, w, h);
+			//g->DrawLine(Pens::Black, 0, 0, w, h);
+			const int nn = 5;
+			float koefW ;
+			float koefH ;			
+			for (int j = 1; j <= nn; j++)
+			{	
+				koefW = w/nn;
+				if (a[j] != 0)
+				{
+					koefH = h/(a[j]);				
+				}
+				
+				g->FillEllipse(Brushes::Black, Rectangle(koefW*(j+k),koefH*(240-a[j-1]),4,4));
+				if(j == nn) break;
+				//g->DrawLine(Pens::Black, (koefW*(j+k)),(koefH*(240-a[j-1])), (koefW*((j+1)+k+15)), (koefH*(240-a[j])));
+
 				k = k+15;
 			}
 			
+			Invalidate();
 		}
 
 	protected:
@@ -64,10 +81,13 @@ namespace test1 {
 		}
 
 	protected: 
+	
 
-	private: System::Windows::Forms::PrintDialog^  printDialog1;
-	private: System::Windows::Forms::TabControl^  tabControl1;
-	private: array<System::Windows::Forms::TabPage^> ^ tabPage;
+
+	private: PrintDialog^  printDialog1;
+	private: TabControl^  tabControl1;
+	private: array<TabPage^> ^ tabPage;
+
 
 
 
@@ -128,12 +148,13 @@ namespace test1 {
 			this->tabPage[i]->Text = "myTab "+ (char)(i+1);
 			this->tabPage[i]->UseVisualStyleBackColor = true;
 			this->tabPage[i]->Click += gcnew System::EventHandler(this, &Form1::tabPage1_Click);
+		//	this->tabPage[i]->Click += gcnew System::
 			};
 			
 			
 			// Form1
 			 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+			this->AutoScaleDimensions = System::Drawing::SizeF(m, t);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(292, 266);
 			this->Controls->Add(this->tabControl1);
@@ -145,14 +166,17 @@ namespace test1 {
 		}
 #pragma endregion
 	private: System::Void tabPage1_Click(System::Object^  sender, System::EventArgs^  e) {
+		//		Graphics^ g = f->Graphics;
+		//		g->DrawEllipse(System::Drawing::Brushes::Black, System::Drawing::Rectangle(5,5,4,4));
+				 //Form1 *form1 = new Form1(8);
+	
 			 }
 private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
 		 }
 private: System::Void Form1_Load_1(System::Object^  sender, System::EventArgs^  e) {
 		 }
+
 private: System::Void Form1_Load_2(System::Object^  sender, System::EventArgs^  e) {
-		 }
-private: System::Void Form1_Load_3(System::Object^  sender, System::EventArgs^  e) {
 		 }
 };
 }

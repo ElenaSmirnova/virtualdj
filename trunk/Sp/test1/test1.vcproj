@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8,00"
 	Name="test1"
-	ProjectGUID="{436E5BC4-28F0-4E50-82B8-37495DC82BB4}"
+	ProjectGUID="{423F6B97-3EB9-4E86-949F-A8D4FD45A75C}"
 	RootNamespace="test1"
 	Keyword="ManagedCProj"
 	>

@@ -6,7 +6,7 @@ void main()
     printf("Start\n");
     //TODO:
     //вызов функции из динамической библиотеки wav
-    read(NULL);
+    read("C:\\temp\\newVirtualDj\\sound\\asteroidexplode.wav");
 
     printf("Stop\n");
 }

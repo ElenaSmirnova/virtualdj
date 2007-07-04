@@ -13,7 +13,7 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpRese
 //TODO:
 extern "C" __declspec(dllexport) void read(read_parameters* parameters)
 {
- char* name1="I:\\virtualdj\\Sp\\sound\\asteroidexplode.wav";
+ char* name1="I:\\virtualdj\\Sp\\sound\\fire.wav";
 	char *name;
 	int i;
 	i=0;
@@ -44,11 +44,31 @@ extern "C" __declspec(dllexport) void read(read_parameters* parameters)
 	printf("LEN Data\t - %ld\n", tw.len_data );
 	if ( strncmp(tw.id_data,"data",4)!=0 )
 		printf("problem - identificator DATA\n");
-	while (tw.sample[i]!=0)
+	byte *samp8 = tw.sample;
+	unsigned short int *samp16 = (unsigned short int *)tw.sample;
+
+	if (tw.bits == 8)
 	{
-		printf("sample\t - %d\n",tw.sample[i]);
-		i=i+1;
+    	while (samp8[i]!=0)
+		{
+			printf("sample\t - %d\n",samp8[i]);
+			i=i+1;
+		}
 	}
+	else
+	{
+    	while (samp16[i]!=0)
+		{
+			printf("sample\t - %d\n",samp16[i]);
+			i=i+1;
+		}
+	}
+ /*i=0;
+	while (tw.sample1[i]!=0)
+	{
+		printf("sample\t - %d\n",tw.sample1[i]);
+		i=i+1;
+	}*/
 	//printf("sample\t - %d\n",tw.fg);
 }
 

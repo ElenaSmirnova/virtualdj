@@ -55,8 +55,9 @@ typedef struct {
 	char id_data[4];//- идентификатор ="data" =0x61746164
 	long len_data;//  - длина выборки
 	//byte fg;
-	byte sample[350];
-	//short int sample[300];
+	//byte sample[250];
+	byte sample[400];
+//	unsigned short int sample[300];
 	} TitleWave;
 #pragma pack(pop)
 

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "resource.h"
 
 namespace sound_processor {
 
@@ -80,6 +80,13 @@ namespace sound_processor {
 			this->OPENFILEDIALOG = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->SAVEFILEDIALOG = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->LABELSTATE = (gcnew System::Windows::Forms::Label());
+			HTHEME hTheme;
+			hTheme = OpenThemeData( SpForm::Handle, L"button");
+			if (!hTheme) // If the handle cannot be retrieved, 
+						 // go back to non-visual style drawing
+						 // code.
+			{
+			}
 			this->SuspendLayout();
 			// 
 			// BUTTON_OPEN
@@ -153,6 +160,7 @@ private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventAr
 			 String^ outputString ="";
 			 if (this->OPENFILEDIALOG->ShowDialog() == Windows::Forms::DialogResult::OK){
 				String^ fileName = this->OPENFILEDIALOG->FileName;
+				NameOfTheOpenedFile = fileName;
 				fileName = fileName->Remove( 0, fileName->LastIndexOf('\\')+1 );
 				outputString = String::Concat("Open ",fileName);
 			 }

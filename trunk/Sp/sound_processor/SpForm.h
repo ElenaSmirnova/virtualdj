@@ -1,5 +1,7 @@
 #pragma once
-#include "resource.h"
+#include < stdio.h >
+#include < stdlib.h >
+#include < vcclr.h >
 
 namespace sound_processor {
 
@@ -160,7 +162,9 @@ private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventAr
 			 String^ outputString ="";
 			 if (this->OPENFILEDIALOG->ShowDialog() == Windows::Forms::DialogResult::OK){
 				String^ fileName = this->OPENFILEDIALOG->FileName;
-				NameOfTheOpenedFile = fileName;
+				size_t  sizeInBytes = ((fileName->Length + 1) * 2);
+			    char* NameOfTheOpenedFile = (char *)malloc(sizeInBytes);
+				//вызов процедуры read(char* name) из wav.cpp
 				fileName = fileName->Remove( 0, fileName->LastIndexOf('\\')+1 );
 				outputString = String::Concat("Open ",fileName);
 			 }

@@ -58,7 +58,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(NoInherit) ComCtl32.lib"
+				AdditionalDependencies="$(NoInherit) ComCtl32.lib ../debug/wav.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
@@ -201,10 +201,6 @@
 			</File>
 			<File
 				RelativePath=".\sound_processor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\sound_processor.exe.manifest"
 				>
 			</File>
 		</Filter>

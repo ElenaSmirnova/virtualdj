@@ -41,9 +41,6 @@ bool distortion(int highLimit, int lowLimit, int buffer[CANALS][LENGTH]){
 					else{
 						if (buffer[i][j] < lowLimit) { buffer[i][j] = lowLimit; }
 					}
-				}else{
-					cout << "one element of buffer is empty\n";
-					return false;
 				}
 			}
 		}
@@ -78,10 +75,6 @@ extern "C" __declspec(dllexport) int mainDistortion(int highLimit, int lowLimit,
 		distResult = distortion(highLimit, lowLimit, buffer);
 	}else{
 		cout << "buffer is empty\n";
-		return 1;
-	}
-
-	if (!distResult) {
 		return 1;
 	}
 
@@ -161,9 +154,6 @@ int sumBuffers(int* buffer,const int* memoryBuffer){
 			if (j>=2*DELAY) {buffer[j] = buffer[j] + secondEcho[j-2*DELAY];}
 		}//создаем выходной буффер
 		
-	}else{
-		cout << "buffer is empty\n";
-		return 1;
 	}
 	return 0;
 }
@@ -199,7 +189,9 @@ extern "C" __declspec(dllexport) int mainEcho(int buffer[CANALS][LENGTH], float 
 	coeff = coefficient;
 	if (buffer != NULL){
 		setMemory(buffer, flagOfFirstUse, memoryBuffer);
-	}else{ return 1; }
+	}else{ 
+		return 1; 
+	}
 	return 0;
 }
 extern "C" __declspec(dllexport) void sound_effect(eff_parameters* parameters)

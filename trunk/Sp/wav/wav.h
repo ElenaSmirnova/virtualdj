@@ -56,7 +56,7 @@ typedef struct {
 	long len_data;//  - длина выборки
 	//byte fg;
 	//byte sample[250];
-	byte sample[400];
+	byte sample[16384];
 //	unsigned short int sample[300];
 	} TitleWave;
 #pragma pack(pop)

@@ -4,19 +4,64 @@
 #ifdef _MANAGED
 #pragma managed(push, off)
 #endif
-
+#define COLUMNS 16384
 BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
     return TRUE;
 }
 
 //TODO:
+void appropriate1(unsigned int toArray[][COLUMNS], const byte* fromArray, int columns,int channell)
+{
+	int i1;
+	i1 = 0;
+	if (channell == 2)
+	{
+		
+		for (int j=0; j<columns; j++)
+		{
+			toArray[0][i1] = fromArray[j];
+			j = j + 1;
+			toArray[1][i1] = fromArray[j];
+			i1 = i1 + 1;
+		}
+	}
+	else 
+	{
+		for (int j=0; j<columns; j++)
+		{
+			toArray[0][j] = fromArray[j];
+			toArray[1][j] = NULL;
+		}
+	}
+}//разделяет одномерный массив на две строчки двумерного массива (8 bits)
+void appropriate2(unsigned int toArray[][COLUMNS], unsigned short int* fromArray, int columns,int channell)
+{
+	int i1;
+	i1 = 0;
+	if (channell == 2)
+	{
+		
+		for (int j=0; j<columns; j++)
+		{
+			toArray[0][i1] = fromArray[j];
+			j = j + 1;
+			toArray[1][i1] = fromArray[j];
+			i1 = i1 + 1;
+		}
+	}
+	else 
+	{
+		for (int j=0; j<columns; j++)
+		{
+			toArray[0][j] = fromArray[j];
+			toArray[1][j] = NULL;
+		}
+	}
+}//разделяет одномерный массив на две строчки двумерного массива (16 bits)
 extern "C" __declspec(dllexport) void read2(char* name)
-extern "C" __declspec(dllexport) void read(char* name)
 {
 	int i = 0;
-	printf("enter name of .wav file\n");
-	printf("Hello world!\n");
 	FILE * f;
 	TitleWave tw;
 	
@@ -42,32 +87,37 @@ extern "C" __declspec(dllexport) void read(char* name)
 	printf("LEN Data\t - %ld\n", tw.len_data );
 	if ( strncmp(tw.id_data,"data",4)!=0 )
 		printf("problem - identificator DATA\n");
+
 	byte *samp8 = tw.sample;
 	unsigned short int *samp16 = (unsigned short int *)tw.sample;
+	unsigned int buff[2][COLUMNS];
 
 	if (tw.bits == 8)
 	{
-    	while (samp8[i]!=0)
+		appropriate1(buff, samp8, tw.len_data,tw.channels);
+		while (i<tw.len_data)
 		{
-			printf("sample\t - %d\n",samp8[i]);
+			printf("sample\t - %d\n",buff[0][i]);
+			if (tw.channels == 2)
+			{
+				printf("s\t - %d\n",buff[1][i]);
+			}
 			i=i+1;
 		}
 	}
 	else
 	{
-    	while (samp16[i]!=0)
+		appropriate2(buff, samp16, 16384,tw.channels);
+		while (i<16384)
 		{
-			printf("sample\t - %d\n",samp16[i]);
+			printf("sample\t - %d\n",buff[0][i]);
+			if (tw.channels == 2)
+			{
+				printf("s\t - %d\n",buff[1][i]);
+			}
 			i=i+1;
 		}
 	}
- /*i=0;
-	while (tw.sample1[i]!=0)
-	{
-		printf("sample\t - %d\n",tw.sample1[i]);
-		i=i+1;
-	}*/
-	//printf("sample\t - %d\n",tw.fg);
 }
 
 //TODO:

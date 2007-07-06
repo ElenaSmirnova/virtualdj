@@ -19,6 +19,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
+			ManagedExtensions="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -38,6 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				RuntimeLibrary="2"
 				WarningLevel="4"
 				DebugInformationFormat="3"
 			/>

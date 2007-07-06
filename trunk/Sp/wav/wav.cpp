@@ -11,7 +11,7 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpRese
 }
 
 //TODO:
-extern "C" __declspec(dllexport) void read(char* name)
+extern "C" __declspec(dllexport) void read2(char* name)
 {
 	int i = 0;
 	printf("enter name of .wav file\n");

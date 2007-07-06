@@ -61,7 +61,7 @@ typedef struct {
 	} TitleWave;
 #pragma pack(pop)
 
-extern "C" __declspec(dllexport) void read(char* name);
+extern "C" __declspec(dllexport) void read2(char* name);
 
 extern "C" __declspec(dllexport) void write(write_parameters* parameters);
 

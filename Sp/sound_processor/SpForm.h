@@ -24,6 +24,128 @@ namespace sound_processor {
 	///          the designers will not be able to interact properly with localized
 	///          resources associated with this form.
 	/// </summary>
+
+    public ref class SpFormEchoDialog : public System::Windows::Forms::Form
+	{
+	public:
+		SpFormEchoDialog(void)
+		{
+			InitializeComponent();
+			//
+			//TODO: Add the constructor code here
+			//
+		}
+
+	protected:
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		~SpFormEchoDialog()
+		{
+			if (components)
+			{
+				delete components;
+			}
+		}
+		private: System::Windows::Forms::Button^  BUTTON_OK;
+
+		private:
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		System::ComponentModel::Container ^components;
+
+#pragma region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		void InitializeComponent(void)
+		{
+			this->BUTTON_OK = (gcnew System::Windows::Forms::Button());
+			this->SuspendLayout();
+
+			// 
+			// BUTTON_OK
+			// 
+			this->BUTTON_OK->Location = System::Drawing::Point(12, 26);
+			this->BUTTON_OK->Name = L"BUTTON_OK";
+			this->BUTTON_OK->Size = System::Drawing::Size(75, 23);
+			this->BUTTON_OK->TabIndex = 0;
+			this->BUTTON_OK->Text = L"Ok";
+			this->BUTTON_OK->UseVisualStyleBackColor = true;
+			this->BUTTON_OK->Click += gcnew System::EventHandler(this, &SpFormEchoDialog::BUTTON_OK_Click);
+
+		}
+#pragma endregion
+		private: System::Void BUTTON_OK_Click(System::Object^  sender, System::EventArgs^  e) {
+					 MessageBox::Show(L"Echo");
+				 }
+};
+
+
+
+
+	public ref class SpFormDistortionDialog : public System::Windows::Forms::Form
+	{
+	public:
+		SpFormDistortionDialog(void)
+		{
+			InitializeComponent();
+			//
+			//TODO: Add the constructor code here
+			//
+		}
+
+	protected:
+		/// <summary>
+		/// Clean up any resources being used.
+		/// </summary>
+		~SpFormDistortionDialog()
+		{
+			if (components)
+			{
+				delete components;
+			}
+		}
+		private: System::Windows::Forms::Button^  BUTTON_OK;
+
+		private:
+		/// <summary>
+		/// Required designer variable.
+		/// </summary>
+		System::ComponentModel::Container ^components;
+
+#pragma region Windows Form Designer generated code
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		void InitializeComponent(void)
+		{
+			this->BUTTON_OK = (gcnew System::Windows::Forms::Button());
+			this->SuspendLayout();
+
+			// 
+			// BUTTON_OK
+			// 
+			this->BUTTON_OK->Location = System::Drawing::Point(12, 26);
+			this->BUTTON_OK->Name = L"BUTTON_OK";
+			this->BUTTON_OK->Size = System::Drawing::Size(75, 23);
+			this->BUTTON_OK->TabIndex = 0;
+			this->BUTTON_OK->Text = L"Ok";
+			this->BUTTON_OK->UseVisualStyleBackColor = true;
+			this->BUTTON_OK->Click += gcnew System::EventHandler(this, &SpFormDistortionDialog::BUTTON_OK_Click);
+		}
+#pragma endregion
+		private: System::Void BUTTON_OK_Click(System::Object^  sender, System::EventArgs^  e) {
+					 MessageBox::Show(L"Distortion");
+				 }
+};
+
+
+
+
 	public ref class SpForm : public System::Windows::Forms::Form
 	{
 	public:
@@ -50,13 +172,11 @@ namespace sound_processor {
 	private: System::Windows::Forms::Button^  BUTTON_CONVERT;
 	private: System::Windows::Forms::Button^  BUTTON_PREVIEW;
 	private: System::Windows::Forms::ComboBox^  COMPOBOX_EFFECTS;
-	private: System::Windows::Forms::Form SpFormEchoDialog;
-
 	private: System::Windows::Forms::OpenFileDialog^  OPENFILEDIALOG;
 	private: System::Windows::Forms::SaveFileDialog^  SAVEFILEDIALOG;
 	private: System::Windows::Forms::Label^  LABELSTATE;
-
-
+			 SpFormEchoDialog^ ECHODIALOG;
+	
 	protected: 
 
 	protected: 
@@ -85,6 +205,7 @@ namespace sound_processor {
 			this->OPENFILEDIALOG = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->SAVEFILEDIALOG = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->LABELSTATE = (gcnew System::Windows::Forms::Label());
+			this->ECHODIALOG = (gcnew SpFormEchoDialog());
 
 			//видимо, тут надо добавить Visual Styles
 			/*HTHEME hTheme = OpenTimeData(SpForm::Handle, this->BUTTON_OPEN->Name);
@@ -187,7 +308,7 @@ private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventAr
                     NameOfTheOpenedFile, sizeInBytes,
                     wch, sizeInBytes);
 
-				read(NameOfTheOpenedFile);
+				read2(NameOfTheOpenedFile);
 				fileName = fileName->Remove( 0, fileName->LastIndexOf('\\')+1 );
 				outputString = String::Concat("Open ",fileName);
 			 }
@@ -212,131 +333,12 @@ private: System::Void COMPOBOX_EFFECTS_SelectedIndexChanged(System::Object^  sen
 				this->LABELSTATE->Text = L"Distortion...";
 			 }else{
 				 if (this->COMPOBOX_EFFECTS->SelectedItem->Equals("Echo")){
-					SpFormEchoDialog::ShowDialog();
+					ECHODIALOG->ShowDialog();
 					this->LABELSTATE->Text = L"Echo...";
 				 }
 			 }
 		 }
 };
-
-
-public ref class SpFormEchoDialog : public System::Windows::Forms::Form
-	{
-	public:
-		SpFormEchoDialog(void)
-		{
-			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
-		}
-
-	protected:
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		~SpFormEchoDialog()
-		{
-			if (components)
-			{
-				delete components;
-			}
-		}
-		private: System::Windows::Forms::Button^  BUTTON_OK;
-
-		private:
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		System::ComponentModel::Container ^components;
-
-#pragma region Windows Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		void InitializeComponent(void)
-		{
-			this->BUTTON_OK = (gcnew System::Windows::Forms::Button());
-			this->SuspendLayout();
-
-			// 
-			// BUTTON_OK
-			// 
-			this->BUTTON_OK->Location = System::Drawing::Point(12, 26);
-			this->BUTTON_OK->Name = L"BUTTON_OK";
-			this->BUTTON_OK->Size = System::Drawing::Size(75, 23);
-			this->BUTTON_OK->TabIndex = 0;
-			this->BUTTON_OK->Text = L"Ok";
-			this->BUTTON_OK->UseVisualStyleBackColor = true;
-			this->BUTTON_OK->Click += gcnew System::EventHandler(this, &SpFormEchoDialog::BUTTON_OK_Click);
-		}
-#pragma endregion
-		private: System::Void BUTTON_OK_Click(System::Object^  sender, System::EventArgs^  e) {
-					 MessageBox::Show(L"Echo");
-				 }
-};
-
-
-
-
-	public ref class SpFormDistortionDialog : public System::Windows::Forms::Form
-	{
-	public:
-		SpFormDistortionDialog(void)
-		{
-			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
-		}
-
-	protected:
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		~SpFormDistortionDialog()
-		{
-			if (components)
-			{
-				delete components;
-			}
-		}
-		private: System::Windows::Forms::Button^  BUTTON_OK;
-
-		private:
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		System::ComponentModel::Container ^components;
-
-#pragma region Windows Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		void InitializeComponent(void)
-		{
-			this->BUTTON_OK = (gcnew System::Windows::Forms::Button());
-			this->SuspendLayout();
-
-			// 
-			// BUTTON_OK
-			// 
-			this->BUTTON_OK->Location = System::Drawing::Point(12, 26);
-			this->BUTTON_OK->Name = L"BUTTON_OK";
-			this->BUTTON_OK->Size = System::Drawing::Size(75, 23);
-			this->BUTTON_OK->TabIndex = 0;
-			this->BUTTON_OK->Text = L"Ok";
-			this->BUTTON_OK->UseVisualStyleBackColor = true;
-			this->BUTTON_OK->Click += gcnew System::EventHandler(this, &SpFormDistortionDialog::BUTTON_OK_Click);
-		}
-#pragma endregion
-		private: System::Void BUTTON_OK_Click(System::Object^  sender, System::EventArgs^  e) {
-					 MessageBox::Show(L"Distortion");
-				 }
-};
-
 
 
 }

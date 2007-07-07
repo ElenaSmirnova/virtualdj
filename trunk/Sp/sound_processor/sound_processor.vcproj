@@ -58,7 +58,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(NoInherit) ComCtl32.lib ../debug/wav.lib"
+				AdditionalDependencies="$(NoInherit) ComCtl32.lib ../debug/wav.lib ../debug/sound_effects.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"

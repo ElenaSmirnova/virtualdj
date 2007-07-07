@@ -35,7 +35,7 @@ buffer - массив с уже обрезанными амплитудами
 
 bool distortion(int highLimit, int lowLimit, int buffer[CANALS][LENGTH]){
 		for (int i = 0; i < CANALS; i++){
-			for (int j = 1; j < LENGTH; j++){
+			for (int j = 0; j < LENGTH; j++){
 				if (buffer[i][j] != NULL) {
 					if (buffer[i][j] > highLimit) { buffer[i][j] = highLimit; }
 					else{
@@ -47,34 +47,19 @@ bool distortion(int highLimit, int lowLimit, int buffer[CANALS][LENGTH]){
 		return true;
 }
 
-int setHighLimit(){
-	int highLimit;
-	cout << "\nEnter the high limit of the amplitude\n";
-	cin >> highLimit;
-	return highLimit;
-}
-
-int setLowLimit(){
-	int lowLimit;
-	cout << "\nEnter the low limit of the amplitude\n";
-	cin >> lowLimit;
-	return lowLimit;
-}
-
 extern "C" __declspec(dllexport) int mainDistortion(int highLimit, int lowLimit, int buffer[CANALS][LENGTH])
 {
 	bool distResult = false;
 
-	while (highLimit <= lowLimit) {
-		cout << "\nSorry, but you have entered wrong limits. Try again, please\n";
-		highLimit = setHighLimit();
-		lowLimit = setLowLimit();
+	if (highLimit <= lowLimit) {
+		cout << "\nSorry, but you have entered wrong limits\n";
+		return 1;
 	}
 
 	if (buffer != NULL) {
 		distResult = distortion(highLimit, lowLimit, buffer);
 	}else{
-		cout << "buffer is empty\n";
+		cout << "The buffer is empty\n";
 		return 1;
 	}
 
@@ -182,16 +167,18 @@ void setMemory(int buffer[CANALS][LENGTH], bool flagOfFirstUse, int memoryBuffer
 
 extern "C" __declspec(dllexport) int mainEcho(int buffer[CANALS][LENGTH], float coefficient, bool flagOfFirstUse, int memoryBuffer[CANALS][LENGTH]){
 	while ((coefficient < 0) || (coefficient >1)){
-		cout << "\nSorry, but coefficient must be in [0,1]. Try again please\n";
-		cin >> coefficient;
+		cout << "\nSorry, but coefficient must be in [0,1]\n";
+		return 1;
 	}
 
 	coeff = coefficient;
 	if (buffer != NULL){
 		setMemory(buffer, flagOfFirstUse, memoryBuffer);
 	}else{ 
+		cout << "The buffer is empty\n";
 		return 1; 
 	}
+
 	return 0;
 }
 extern "C" __declspec(dllexport) void sound_effect(eff_parameters* parameters)

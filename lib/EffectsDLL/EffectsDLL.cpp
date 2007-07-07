@@ -37,16 +37,16 @@ buffer - массив с уже обрезанными амплитудами
 
 bool distortion(int highLimit, int lowLimit, int buffer[CANALS][LENGTH]){
 		for (int i = 0; i < CANALS; i++){
-			for (int j = 1; j < LENGTH; j++){
+			for (int j = 0; j < LENGTH; j++){
 				if (buffer[i][j] != NULL) {
 					if (buffer[i][j] > highLimit) { buffer[i][j] = highLimit; }
 					else{
 						if (buffer[i][j] < lowLimit) { buffer[i][j] = lowLimit; }
 					}
-				}else{
+				}/*else{
 					cout << "one element of buffer is empty\n";
 					return false;
-				}
+				}*/
 			}
 		}
 		return true;

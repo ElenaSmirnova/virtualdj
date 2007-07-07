@@ -30,16 +30,24 @@ int main()
 	if (0 == mainDistortion(0,0,bufferFromUser)){
 		cout << "\n after distortion \n\n";
 		printArray(bufferFromUser);
+	}else{
+		cout << "mainDistortion exit with error\n";
 	}
 
 	float coefficient = 10;
 	int memoryBuffer[CANALS][LENGTH];
-	mainEcho(bufferFromUser, coefficient, true, memoryBuffer);
-	cout << "\nfirst echoed buffer\n";
-	printArray(bufferFromUser);
-	mainEcho(bufferFromUser, coefficient, false, memoryBuffer);
-	cout << "\nsecond echoed buffer\n";
-	printArray(bufferFromUser);
+	if (0 == mainEcho(bufferFromUser, coefficient, true, memoryBuffer)){
+		cout << "\nfirst echoed buffer\n";
+		printArray(bufferFromUser);
+	}else{
+		cout << "first mainEcho exit with error\n";
+	}
+	if (0 == mainEcho(bufferFromUser, coefficient, false, memoryBuffer)){
+		cout << "\nsecond echoed buffer\n";
+		printArray(bufferFromUser);
+	}else{
+		cout << "second mainEcho exit with error\n";
+	}
 	
 	getch();
 	return 0;

@@ -124,32 +124,32 @@ namespace sound_processor {
 				 size_t convertedChars = 0;
 				 errno_t err = 0;
 				 size_t  sizeInBytes = ((text->Length + 1) * 2);
-				 char* numberInChar = (char *)malloc(sizeInBytes);
+				 char* coefficientInChar = (char *)malloc(sizeInBytes);
 				 err = wcstombs_s(&convertedChars, 
-					numberInChar, sizeInBytes,
+					coefficientInChar, sizeInBytes,
 					wch, sizeInBytes);
 
-				 if (numberInChar != NULL) {
+				 if (coefficientInChar != NULL) {
 
 					 //перевод из char* в float
-					 int intNumber = 0;
+					 int intCoefficient = 0;
 					 int placeOfPoint = 0;
 					 int length = 0;
-					 while (numberInChar[length] != '\0') length++;
+					 while (coefficientInChar[length] != '\0') length++;
 					 for (int i=0; i<length; i++){
-						 if (numberInChar[i] != '.'){
-							intNumber = intNumber*10 + (numberInChar[i]-48);
+						 if (coefficientInChar[i] != '.'){
+							intCoefficient = intCoefficient*10 + (coefficientInChar[i]-48);
 						 }else{
 							 placeOfPoint = i;
 						 }
 					 }
-					 float number = intNumber;
+					 float coefficient = intCoefficient;
 					 for (int i=0; i < (length-placeOfPoint-1); i++){
-						 number = number/10;
+						 coefficient = coefficient/10;
 					 }
 
-					 if ((number < 1)&&(number > 0)) { //корректные данные
-						 //вызов процедуры Echo с нужными параметрами
+					 if ((coefficient < 1)&&(coefficient > 0)) { //корректные данные
+						 //mainEcho(buffer, coefficient, flagOfFirstUse, memoryBuffer); //вызов процедуры Echo с нужными параметрами
 						 Close();
 					 }else{
 						 MessageBox::Show(L"The coefficient must be between 0 and 1", L"Error", 
@@ -319,7 +319,7 @@ namespace sound_processor {
 				 }
 
 				 if (lowLimit < highLimit) { //корректные данные
-					 //вызов процедуры Distortion с нужными параметрами
+					 //mainDistortion(highLimit, lowLimit, buffer); //вызов процедуры Distortion с нужными параметрами
 					 Close();
 				 }else{
 					 MessageBox::Show(L"You have entered wrong limits", L"Error", 

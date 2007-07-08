@@ -149,6 +149,7 @@ namespace sound_processor {
 					 }
 
 					 if ((coefficient < 1)&&(coefficient > 0)) { //корректные данные
+						 //int memoryBuffer[CANALS][LENGTH];
 						 //mainEcho(buffer, coefficient, flagOfFirstUse, memoryBuffer); //вызов процедуры Echo с нужными параметрами
 						 Close();
 					 }else{
@@ -391,7 +392,9 @@ namespace sound_processor {
 			this->ECHODIALOG = (gcnew SpFormEchoDialog());
 			this->DISTORTIONDIALOG = (gcnew SpFormDistortionDialog());
 			this->SuspendLayout();
-
+			//
+			//BUTTON_OPEN
+			//
 			this->BUTTON_OPEN->Location = System::Drawing::Point(12, 26);
 			this->BUTTON_OPEN->Name = L"BUTTON_OPEN";
 			this->BUTTON_OPEN->Size = System::Drawing::Size(75, 23);
@@ -399,6 +402,9 @@ namespace sound_processor {
 			this->BUTTON_OPEN->Text = L"Open";
 			this->BUTTON_OPEN->UseVisualStyleBackColor = true;
 			this->BUTTON_OPEN->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_OPEN_Click);
+			//
+			//BUTTON_CONVERT
+			//
 			this->BUTTON_CONVERT->Location = System::Drawing::Point(205, 152);
 			this->BUTTON_CONVERT->Name = L"BUTTON_CONVERT";
 			this->BUTTON_CONVERT->Size = System::Drawing::Size(75, 23);
@@ -406,6 +412,9 @@ namespace sound_processor {
 			this->BUTTON_CONVERT->Text = L"Convert";
 			this->BUTTON_CONVERT->UseVisualStyleBackColor = true;
 			this->BUTTON_CONVERT->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_CONVERT_Click);
+			//
+			//BUTTON_PREVIEW
+			//
 			this->BUTTON_PREVIEW->Location = System::Drawing::Point(205, 95);
 			this->BUTTON_PREVIEW->Name = L"BUTTON_PREVIEW";
 			this->BUTTON_PREVIEW->Size = System::Drawing::Size(75, 23);
@@ -413,6 +422,9 @@ namespace sound_processor {
 			this->BUTTON_PREVIEW->Text = L"Preview";
 			this->BUTTON_PREVIEW->UseVisualStyleBackColor = true;
 			this->BUTTON_PREVIEW->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_PREVIEW_Click);
+			//
+			//COMPOBOX_EFFECTS
+			//
 			this->COMPOBOX_EFFECTS->FormattingEnabled = true;
 			this->COMPOBOX_EFFECTS->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Echo", L"Distortion"});
 			this->COMPOBOX_EFFECTS->Location = System::Drawing::Point(12, 95);
@@ -420,12 +432,16 @@ namespace sound_processor {
 			this->COMPOBOX_EFFECTS->Size = System::Drawing::Size(121, 21);
 			this->COMPOBOX_EFFECTS->TabIndex = 3;
 			this->COMPOBOX_EFFECTS->SelectedIndexChanged += gcnew System::EventHandler(this, &SpForm::COMPOBOX_EFFECTS_SelectedIndexChanged);
+			//
+			//LABELSTATE
+			//
 			this->LABELSTATE->BackColor = System::Drawing::SystemColors::ButtonFace;
 			this->LABELSTATE->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->LABELSTATE->Location = System::Drawing::Point(0, 196);
 			this->LABELSTATE->Name = L"LABELSTATE";
 			this->LABELSTATE->Size = System::Drawing::Size(292, 18);
 			this->LABELSTATE->TabIndex = 4;
+
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(292, 213);

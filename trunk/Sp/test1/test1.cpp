@@ -1,8 +1,10 @@
+
 // test1.cpp : main project file.
 
 #include "stdafx.h"
 #include "Form1.h"
 #define n 2
+#define m  5
 
 using namespace test1;
 
@@ -14,7 +16,7 @@ int main(array<System::String ^> ^args)
 	Application::SetCompatibleTextRenderingDefault(false); 
 
 	// Create the main window and run it
-	Application::Run(gcnew Form1(n));
+	Application::Run(gcnew Form1(n, m));
 	return 0;
 	
 }

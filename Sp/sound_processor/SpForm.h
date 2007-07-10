@@ -117,6 +117,7 @@ namespace sound_processor {
 		}
 #pragma endregion
 	private: System::Void BUTTON_OK_Click(System::Object^  sender, System::EventArgs^  e) {
+				 this->DialogResult = System::Windows::Forms::DialogResult::None;
 				 String^ text = this->TEXTBOX->Text;
 
 				 //перевод System::String в char*
@@ -149,8 +150,11 @@ namespace sound_processor {
 					 }
 
 					 if ((coefficient < 1)&&(coefficient > 0)) { //корректные данные
-						 //int memoryBuffer[CANALS][LENGTH];
-						 //mainEcho(buffer, coefficient, flagOfFirstUse, memoryBuffer); //вызов процедуры Echo с нужными параметрами
+						 int memoryBuffer[CANALS][LENGTH];
+						 int buffer[][6] = {{10000,20000,30000},{40000,50000,60000}};
+						 bool flagOfFirstUse = true;
+						 mainEcho(buffer, coefficient, flagOfFirstUse, memoryBuffer); //вызов процедуры Echo с нужными параметрами
+						 this->DialogResult = System::Windows::Forms::DialogResult::OK;
 						 Close();
 					 }else{
 						 MessageBox::Show(L"The coefficient must be between 0 and 1", L"Error", 
@@ -221,39 +225,24 @@ namespace sound_processor {
 			this->TEXTBOXLOWLIMIT = (gcnew System::Windows::Forms::TextBox());
 			this->BUTTON_OK = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
-			// 
-			// LABELHIGHLIMIT
-			// 
 			this->LABELHIGHLIMIT->Location = System::Drawing::Point(34, 29);
 			this->LABELHIGHLIMIT->Name = L"LABELHIGHLIMIT";
 			this->LABELHIGHLIMIT->Size = System::Drawing::Size(93, 17);
 			this->LABELHIGHLIMIT->TabIndex = 1;
 			this->LABELHIGHLIMIT->Text = L"High limit";
-			// 
-			// TEXTBOXHIGHLIMIT
-			// 
 			this->TEXTBOXHIGHLIMIT->Location = System::Drawing::Point(149, 26);
 			this->TEXTBOXHIGHLIMIT->Name = L"TEXTBOXHIGHLIMIT";
 			this->TEXTBOXHIGHLIMIT->Size = System::Drawing::Size(111, 20);
 			this->TEXTBOXHIGHLIMIT->TabIndex = 2;
-			// 
-			// LABELLOWLIMIT
-			// 
 			this->LABELLOWLIMIT->Location = System::Drawing::Point(34, 68);
 			this->LABELLOWLIMIT->Name = L"LABELLOWLIMIT";
 			this->LABELLOWLIMIT->Size = System::Drawing::Size(93, 16);
 			this->LABELLOWLIMIT->TabIndex = 4;
 			this->LABELLOWLIMIT->Text = L"Low limit";
-			// 
-			// TEXTBOXLOWLIMIT
-			// 
 			this->TEXTBOXLOWLIMIT->Location = System::Drawing::Point(149, 68);
 			this->TEXTBOXLOWLIMIT->Name = L"TEXTBOXLOWLIMIT";
 			this->TEXTBOXLOWLIMIT->Size = System::Drawing::Size(111, 20);
 			this->TEXTBOXLOWLIMIT->TabIndex = 5;
-			// 
-			// BUTTON_OK
-			// 
 			this->BUTTON_OK->Location = System::Drawing::Point(184, 108);
 			this->BUTTON_OK->Name = L"BUTTON_OK";
 			this->BUTTON_OK->Size = System::Drawing::Size(75, 23);
@@ -261,9 +250,6 @@ namespace sound_processor {
 			this->BUTTON_OK->Text = L"OK";
 			this->BUTTON_OK->UseVisualStyleBackColor = true;
 			this->BUTTON_OK->Click += gcnew System::EventHandler(this, &SpFormDistortionDialog::BUTTON_OK_Click);
-			// 
-			// SpForm
-			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(292, 159);
@@ -282,6 +268,7 @@ namespace sound_processor {
 #pragma endregion
 
 	private: System::Void BUTTON_OK_Click(System::Object^  sender, System::EventArgs^  e) {
+				 this->DialogResult = System::Windows::Forms::DialogResult::None;
 				 String^ highLimitStr = this->TEXTBOXHIGHLIMIT->Text;
 				 String^ lowLimitStr = this->TEXTBOXLOWLIMIT->Text;
 
@@ -321,6 +308,7 @@ namespace sound_processor {
 
 				 if (lowLimit < highLimit) { //корректные данные
 					 //mainDistortion(highLimit, lowLimit, buffer); //вызов процедуры Distortion с нужными параметрами
+					 this->DialogResult = System::Windows::Forms::DialogResult::OK;
 					 Close();
 				 }else{
 					 MessageBox::Show(L"You have entered wrong limits", L"Error", 
@@ -392,9 +380,6 @@ namespace sound_processor {
 			this->ECHODIALOG = (gcnew SpFormEchoDialog());
 			this->DISTORTIONDIALOG = (gcnew SpFormDistortionDialog());
 			this->SuspendLayout();
-			//
-			//BUTTON_OPEN
-			//
 			this->BUTTON_OPEN->Location = System::Drawing::Point(12, 26);
 			this->BUTTON_OPEN->Name = L"BUTTON_OPEN";
 			this->BUTTON_OPEN->Size = System::Drawing::Size(75, 23);
@@ -402,9 +387,6 @@ namespace sound_processor {
 			this->BUTTON_OPEN->Text = L"Open";
 			this->BUTTON_OPEN->UseVisualStyleBackColor = true;
 			this->BUTTON_OPEN->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_OPEN_Click);
-			//
-			//BUTTON_CONVERT
-			//
 			this->BUTTON_CONVERT->Location = System::Drawing::Point(205, 152);
 			this->BUTTON_CONVERT->Name = L"BUTTON_CONVERT";
 			this->BUTTON_CONVERT->Size = System::Drawing::Size(75, 23);
@@ -412,9 +394,6 @@ namespace sound_processor {
 			this->BUTTON_CONVERT->Text = L"Convert";
 			this->BUTTON_CONVERT->UseVisualStyleBackColor = true;
 			this->BUTTON_CONVERT->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_CONVERT_Click);
-			//
-			//BUTTON_PREVIEW
-			//
 			this->BUTTON_PREVIEW->Location = System::Drawing::Point(205, 95);
 			this->BUTTON_PREVIEW->Name = L"BUTTON_PREVIEW";
 			this->BUTTON_PREVIEW->Size = System::Drawing::Size(75, 23);
@@ -422,9 +401,6 @@ namespace sound_processor {
 			this->BUTTON_PREVIEW->Text = L"Preview";
 			this->BUTTON_PREVIEW->UseVisualStyleBackColor = true;
 			this->BUTTON_PREVIEW->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_PREVIEW_Click);
-			//
-			//COMPOBOX_EFFECTS
-			//
 			this->COMPOBOX_EFFECTS->FormattingEnabled = true;
 			this->COMPOBOX_EFFECTS->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Echo", L"Distortion"});
 			this->COMPOBOX_EFFECTS->Location = System::Drawing::Point(12, 95);
@@ -432,16 +408,12 @@ namespace sound_processor {
 			this->COMPOBOX_EFFECTS->Size = System::Drawing::Size(121, 21);
 			this->COMPOBOX_EFFECTS->TabIndex = 3;
 			this->COMPOBOX_EFFECTS->SelectedIndexChanged += gcnew System::EventHandler(this, &SpForm::COMPOBOX_EFFECTS_SelectedIndexChanged);
-			//
-			//LABELSTATE
-			//
 			this->LABELSTATE->BackColor = System::Drawing::SystemColors::ButtonFace;
 			this->LABELSTATE->BorderStyle = System::Windows::Forms::BorderStyle::FixedSingle;
 			this->LABELSTATE->Location = System::Drawing::Point(0, 196);
 			this->LABELSTATE->Name = L"LABELSTATE";
 			this->LABELSTATE->Size = System::Drawing::Size(292, 18);
 			this->LABELSTATE->TabIndex = 4;
-
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(292, 213);
@@ -494,13 +466,20 @@ private: System::Void BUTTON_PREVIEW_Click(System::Object^  sender, System::Even
 			 this->LABELSTATE->Text = L"Preview...";
 		 }
 private: System::Void COMPOBOX_EFFECTS_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+			 this->LABELSTATE->Text = L"";
 			 if (this->COMPOBOX_EFFECTS->SelectedItem->Equals("Distortion")){
-				 DISTORTIONDIALOG->ShowDialog();
-				this->LABELSTATE->Text = L"Distortion...";
+				DISTORTIONDIALOG->ShowDialog();
+				System::Windows::Forms::DialogResult dlgResult = DISTORTIONDIALOG->DialogResult;
+				if (dlgResult == System::Windows::Forms::DialogResult::OK) {
+					this->LABELSTATE->Text = L"Distortion...";
+				}
 			 }else{
 				 if (this->COMPOBOX_EFFECTS->SelectedItem->Equals("Echo")){
 					ECHODIALOG->ShowDialog();
-					this->LABELSTATE->Text = L"Echo...";
+					System::Windows::Forms::DialogResult dlgResult = ECHODIALOG->DialogResult;
+					if (dlgResult == System::Windows::Forms::DialogResult::OK) {
+						this->LABELSTATE->Text = L"Echo...";
+					}
 				 }
 			 }
 		 }

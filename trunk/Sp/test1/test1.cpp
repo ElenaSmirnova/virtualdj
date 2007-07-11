@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "Form1.h"
 #define n 2
-#define m  5
+
 
 using namespace test1;
 
@@ -16,7 +16,7 @@ int main(array<System::String ^> ^args)
 	Application::SetCompatibleTextRenderingDefault(false); 
 
 	// Create the main window and run it
-	Application::Run(gcnew Form1(n, m));
+	Application::Run(gcnew Form1(n));
 	return 0;
 	
 }

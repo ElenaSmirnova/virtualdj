@@ -3,11 +3,13 @@
 
 #pragma once
 #include <string>
-//#include <>
+
+
 
 
 const int SizeFormH = 6;
 const int SizeFormW = 13;
+
 
 namespace test1 {
 
@@ -23,15 +25,31 @@ namespace test1 {
 	int const arraySise = 5;
 	int _array[arraySise];
     
-  /*  public ref class Label1 : public System::Windows::Forms::Label
-    {
-    public:
-        Label1(String^ number){
-            this->Text = number;
-            this->Location = Point(20, 30);
-            this->Size = System::Drawing::Size(35, 13);
-        }
-    };*/
+	public ref class hScrollBar1 : public System::Windows::Forms::HScrollBar
+	{
+	public:
+		hScrollBar1(int width, int height){
+		//InitializeScroll();
+		Size = System::Drawing::Size(width, 10);
+		Location = System::Drawing::Point(0, height-10);
+
+		}
+
+		//void pagePaint(Object^ /*sender*/, PaintEventArgs^ e);
+		//void MouseMove(Object^/*sender*/, MouseEventArgs^ e);
+		 virtual void OnSizeChanged (EventArgs^ e) override
+		{
+            
+			Invalidate();
+			HScrollBar::OnSizeChanged(e);
+		}
+
+		// void InitializeScroll(){
+			 //this->Paint += gcnew System::Windows::Forms::PaintEventHandler( this, &hScrollBar1::pagePaint );
+
+		 //}
+		
+	};
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
     
@@ -39,12 +57,11 @@ namespace test1 {
 			
 
 	public:
-		Form1(int NumberTabs, int arraySise)
+		Form1(int NumberTabs)
 		{
            
 			tabPage = gcnew array<System::Windows::Forms::TabPage^>(NumberTabs);
-            label = gcnew array<System::Windows::Forms::Label^>(arraySise);
-			InitializeComponent(NumberTabs, arraySise);
+            InitializeComponent(NumberTabs, arraySise);
             
 		}
         
@@ -78,9 +95,6 @@ namespace test1 {
 			{
 				koefH = (h-h/20)/max;
 			}
-           
-           set(koefW,koefH);
-
 
             // draw graphics
 			for (int j = 1; j < arraySise; j++)
@@ -139,8 +153,17 @@ namespace test1 {
 				drawString = str2;
 				drawPoint = Point(indent-20, h-_array[i]*koefH);
 				e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   
-
 			}
+
+			/*System::Drawing::Size preferredSize = tabPage[0]->ClientSize::get();
+          
+			hScrollBar1^ hScrollBar = (gcnew hScrollBar1(preferredSize.Width,preferredSize.Height));
+           
+            this->tabPage[0]->Controls->Add(hScrollBar);*/
+				
+			//	hScrollBar->Size = System::Drawing::Size(w, 5);
+			//	hScrollBar->Location = System::Drawing::Point(0, h*NumberGraphics - 5);
+			
 		}
 
 	protected:
@@ -157,6 +180,8 @@ namespace test1 {
 
         virtual void OnSizeChanged (EventArgs^ e) override
 		{
+            
+			
             Invalidate();
 			Form::OnSizeChanged(e);
 		}
@@ -169,18 +194,9 @@ namespace test1 {
 	private: PrintDialog^  printDialog1;
 	private: TabControl^  tabControl1;
 	private: array<TabPage^> ^ tabPage;
-	private: System::Windows::Forms::TextBox^  textBox1;
-	private: System::Windows::Forms::TextBox^  textBox2;
-    private: array<Label^> ^ label;
-    private: float koefW;
-    private: float koefH;
-    
-    private:
-        void set(float n, float m)
-        {
-            koefW = n;
-            koefH = m;
-        }
+	private: hScrollBar1^  hScrollBar;
+	
+	    
 
 	private:
 		/// <summary>
@@ -199,14 +215,20 @@ namespace test1 {
 			int i;
 			this->printDialog1 = (gcnew System::Windows::Forms::PrintDialog());
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
+			
+			//hScrollBar1^ hScrollBar = (gcnew hScrollBar1(Drawing::Size::Width,Drawing::Size::Height));
+			
 			for (i = 0; i < NumberTabs; i++)
 			{
 				this->tabPage[i] = (gcnew System::Windows::Forms::TabPage());
 			};
-           
             
+
+			
 			this->tabControl1->SuspendLayout();
 			this->SuspendLayout();
+
+
 			// 
 			// printDialog1
 			// 
@@ -215,6 +237,8 @@ namespace test1 {
 			// 
 			// tabControl1
 			// 
+
+
 			this->tabPage[0]->Paint += gcnew System::Windows::Forms::PaintEventHandler( this, &Form1::pagePaint );
 			
 			for(i = 0; i < NumberTabs; i++)
@@ -243,22 +267,13 @@ namespace test1 {
 				this->tabPage[i]->Click += gcnew System::EventHandler(this, &Form1::tabPage1_Click);
 			};
 
-
-            //
-            // label1
-            
- /*           for (i = 0; i < arraySise; i++){
-                this->label[i]->AutoSize = true;
-                this->label[i]->Location = System::Drawing::Point(30 + i*koefW, 70);
-                this->label[i]->Name = L"label";
-                this->label[i]->Size = System::Drawing::Size(35, 13);
-                this->label[i]->TabIndex = 0;
-                this->label[i]->Text = L"label";
+			//drawing hScrollBar with the size of the client part of the window
+			System::Drawing::Size preferredSize = tabPage[0]->ClientSize::get();
+          
+			hScrollBar1^ hScrollBar = (gcnew hScrollBar1(preferredSize.Width,preferredSize.Height));
            
-                
-            }*/
-            // 
-            
+            this->tabPage[0]->Controls->Add(hScrollBar);
+			
 			// Form1
 			 
 			this->AutoScaleDimensions = System::Drawing::SizeF(SizeFormH, SizeFormW);
@@ -274,7 +289,7 @@ namespace test1 {
 
 		}
 #pragma endregion
-	private: System::Void tabPage1_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void tabPage1_Click(System::Object^  sender, System::EventArgs^  e) {
 			 }
 private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
 		 }
@@ -287,6 +302,8 @@ private: System::Void Form1_Load_2(System::Object^  sender, System::EventArgs^  
 private: System::Void textBox2_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }
 private: System::Void Form1_Load_3(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void Form1_Load_4(System::Object^  sender, System::EventArgs^  e) {
 		 }
 };
 }

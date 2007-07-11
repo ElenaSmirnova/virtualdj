@@ -1,7 +1,8 @@
 // This is the main DLL file.
-
+#pragma once
 #include "viewer.h"
-
+//#include "..\test1\test1.cpp"
+//#include "..\test1\Form1.h"
 #ifdef _MANAGED
 #pragma managed(push, off)
 #endif
@@ -12,9 +13,9 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpRese
 }
 
 //TODO:
-extern "C" __declspec(dllexport) void view(view_parameters* parameters)
+extern "C" __declspec(dllexport) void view(Buffer* buf)
 {
-    printf("Hello world!\n");
+    //Application::Run(gcnew Form1(buf));
 }
 
 

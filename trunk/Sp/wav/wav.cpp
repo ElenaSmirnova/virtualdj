@@ -11,7 +11,7 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpRese
 }
 
 //TODO:
-void appropriate1(unsigned int **toArray, const byte *fromArray,long int columns,int channell)
+void appropriate1(int **toArray, const byte *fromArray,long int columns,int channell)
 {
 	int i1;
 	i1 = 0;
@@ -30,12 +30,12 @@ void appropriate1(unsigned int **toArray, const byte *fromArray,long int columns
 	{
 		for (long int j = 0; j < columns; j ++)
 		{
-			toArray[j][0] = (unsigned int)fromArray[j];
+			toArray[j][0] = (int)fromArray[j];
 			toArray[j][1] = NULL;
 		}
 	}
 }//разделяет одномерный массив на две строчки двумерного массива (8 bits)
-void appropriate2(unsigned int **toArray, unsigned short int *fromArray, long int columns,int channell)
+void appropriate2(int **toArray, short int *fromArray, long int columns,int channell)
 {
 	int i1,len;
 	i1 = 0;
@@ -103,11 +103,11 @@ extern "C" __declspec(dllexport) void read2(Buffer *buffer, char* name)
 
 	buffer->frequency = tw.freq;
 	byte *samp8 = tw.sample;
-	unsigned short int *samp16 = (unsigned short int *)tw.sample;
-	buffer->buff = (unsigned int  **)calloc(tw.len_data,sizeof(unsigned int  *));
+	short int *samp16 = (short int *)tw.sample;
+	buffer->buff = (int  **)calloc(tw.len_data,sizeof(int  *));
 	for (i = 0; i < tw.len_data; i ++)
 	{
-              buffer->buff[i]=(unsigned int *)calloc(2, sizeof(unsigned int));
+              buffer->buff[i]=(int *)calloc(2, sizeof(int));
 	}
 	i = 0;
 	if (tw.bits == 8)

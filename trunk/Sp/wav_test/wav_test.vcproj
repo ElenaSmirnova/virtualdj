@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="8,00"
 	Name="wav_test"
 	ProjectGUID="{B974602E-5B14-4D3E-9530-7B9038137CB3}"
 	RootNamespace="wav_test"

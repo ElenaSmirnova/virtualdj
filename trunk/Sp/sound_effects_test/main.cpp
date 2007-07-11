@@ -6,10 +6,10 @@
 using namespace std;
 
 
-void printArray(int arr[][LENGTH]){
+void printArray(Buffer *buffer){
 	for (int i=0; i<CANALS; i++){
-		for(int j=0; j<LENGTH; j++){
-			cout << arr[i][j] << " ";
+		for(int j=0; j<buffer->len_buff; j++){
+			cout << buffer->buff[j][i] << " ";
 		}
 		cout << "\n";
 	}
@@ -17,25 +17,39 @@ void printArray(int arr[][LENGTH]){
 
 int main()
 {
-	int bufferFromUser[CANALS][LENGTH];
+	Buffer *bufferFromUser = new Buffer();
+	bufferFromUser->len_buff = 6;
+	
+	bufferFromUser->buff = (int  **)calloc(bufferFromUser->len_buff,sizeof(int  *));
+	for (int i = 0; i < bufferFromUser->len_buff; i ++)
+	{
+              bufferFromUser->buff[i]=(int *)calloc(2, sizeof(int));
+	}
 
-	for (int i = 0; i < CANALS; i++){
-		for (int j = 0; j < LENGTH; j++){
-			bufferFromUser[i][j] = - RAND_MAX/2 + rand();
+	for (int j = 0; j < bufferFromUser->len_buff; j++){
+		for (int i = 0; i < CANALS; i++){
+			bufferFromUser->buff[j][i] = - RAND_MAX/2 + rand();
 		}
 	}
 
 	printArray(bufferFromUser);
 
-	if (0 == mainDistortion(0,0,bufferFromUser)){
+	if (0 == mainDistortion(10000,-15000,bufferFromUser)){
 		cout << "\n after distortion \n\n";
 		printArray(bufferFromUser);
 	}else{
 		cout << "mainDistortion exit with error\n";
 	}
 
-	float coefficient = 10;
-	int memoryBuffer[CANALS][LENGTH];
+	float coefficient = 0.9;
+	Buffer *memoryBuffer = new Buffer();
+
+	memoryBuffer->buff = (int  **)calloc(bufferFromUser->len_buff,sizeof(int  *));
+	for (int i = 0; i < bufferFromUser->len_buff; i ++)
+	{
+              bufferFromUser->buff[i]=(int *)calloc(2, sizeof(int));
+	}
+
 	if (0 == mainEcho(bufferFromUser, coefficient, true, memoryBuffer)){
 		cout << "\nfirst echoed buffer\n";
 		printArray(bufferFromUser);

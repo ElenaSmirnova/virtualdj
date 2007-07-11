@@ -4,69 +4,73 @@
 #ifdef _MANAGED
 #pragma managed(push, off)
 #endif
-#define COLUMNS 16384
+
 BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {
     return TRUE;
 }
 
 //TODO:
-void appropriate1(unsigned int toArray[][COLUMNS], const byte* fromArray, int columns,int channell)
+void appropriate1(unsigned int **toArray, const byte *fromArray,long int columns,int channell)
 {
 	int i1;
 	i1 = 0;
 	if (channell == 2)
 	{
 		
-		for (int j=0; j<columns; j++)
+		for (long int j = 0; j < columns; j ++)
 		{
-			toArray[0][i1] = fromArray[j];
+			toArray[i1][0] = fromArray[j];
 			j = j + 1;
-			toArray[1][i1] = fromArray[j];
+			toArray[i1][1] = fromArray[j];
 			i1 = i1 + 1;
 		}
 	}
 	else 
 	{
-		for (int j=0; j<columns; j++)
+		for (long int j = 0; j < columns; j ++)
 		{
-			toArray[0][j] = fromArray[j];
-			toArray[1][j] = NULL;
+			toArray[j][0] = (unsigned int)fromArray[j];
+			toArray[j][1] = NULL;
 		}
 	}
 }//разделяет одномерный массив на две строчки двумерного массива (8 bits)
-void appropriate2(unsigned int toArray[][COLUMNS], unsigned short int* fromArray, int columns,int channell)
+void appropriate2(unsigned int **toArray, unsigned short int *fromArray, long int columns,int channell)
 {
-	int i1;
+	int i1,len;
 	i1 = 0;
 	if (channell == 2)
 	{
 		
-		for (int j=0; j<columns; j++)
+		for (long int j = 0; j < columns; j ++)
 		{
-			toArray[0][i1] = fromArray[j];
+			toArray[i1][0] = fromArray[j];
 			j = j + 1;
-			toArray[1][i1] = fromArray[j];
+			toArray[i1][1] = fromArray[j];
 			i1 = i1 + 1;
 		}
 	}
 	else 
 	{
-		for (int j=0; j<columns; j++)
+		for (long int j = 0; j < columns; j ++)
 		{
-			toArray[0][j] = fromArray[j];
-			toArray[1][j] = NULL;
+			toArray[j][0] = fromArray[j];
+			toArray[j][1] = NULL;
 		}
-	}
+	} 
 }//разделяет одномерный массив на две строчки двумерного массива (16 bits)
-extern "C" __declspec(dllexport) void read2(char* name)
+extern "C" __declspec(dllexport) void read2(Buffer *buffer, char* name)
 {
 	int i = 0;
 	FILE * f;
 	TitleWave tw;
 	
 	f=fopen(name,"r");
-	if ( f==0 ) { printf("Cannot open file - %s\n",name); return; }
+	if ( f == 0 ) 
+	{ 
+		printf("Cannot open file - %s\n", name); 
+		return; 
+	}
 	fread(&tw,sizeof(TitleWave),1,f);
 	fclose(f);
 	printf("LEN RIFF\t - %ld\n", tw.len_riff );
@@ -88,36 +92,52 @@ extern "C" __declspec(dllexport) void read2(char* name)
 	if ( strncmp(tw.id_data,"data",4)!=0 )
 		printf("problem - identificator DATA\n");
 
+	if ((tw.bits == 16) && ( tw.channels == 2)) 
+	{
+		buffer->len_buff = tw.len_data/4;
+	}
+	else 
+	{
+		buffer->len_buff = tw.len_data;
+	}
+
+	buffer->frequency = tw.freq;
 	byte *samp8 = tw.sample;
 	unsigned short int *samp16 = (unsigned short int *)tw.sample;
-	unsigned int buff[2][COLUMNS];
-
+	buffer->buff = (unsigned int  **)calloc(tw.len_data,sizeof(unsigned int  *));
+	for (i = 0; i < tw.len_data; i ++)
+	{
+              buffer->buff[i]=(unsigned int *)calloc(2, sizeof(unsigned int));
+	}
+	i = 0;
 	if (tw.bits == 8)
 	{
-		appropriate1(buff, samp8, tw.len_data,tw.channels);
-		while (i<tw.len_data)
+		appropriate1(buffer->buff, samp8, tw.len_data, tw.channels);
+		while (i < tw.len_data)
 		{
-			printf("sample\t - %d\n",buff[0][i]);
+			printf("sampleChannel1\t - %d\n", buffer->buff[i][0]);
 			if (tw.channels == 2)
 			{
-				printf("s\t - %d\n",buff[1][i]);
+				printf("sampleChannel2\t - %d\n", buffer->buff[i][1]);
 			}
-			i=i+1;
+			i = i+1;
 		}
 	}
 	else
 	{
-		appropriate2(buff, samp16, 16384,tw.channels);
-		while (i<16384)
+		appropriate2(buffer->buff, samp16, tw.len_data/2, tw.channels);
+		while (i < tw.len_data/4)
 		{
-			printf("sample\t - %d\n",buff[0][i]);
+			printf("sampleChannel1\t - %d\n", buffer->buff[i][0]);
 			if (tw.channels == 2)
 			{
-				printf("s\t - %d\n",buff[1][i]);
+				printf("sampleChannel2\t - %d\n", buffer->buff[i][1]);
 			}
-			i=i+1;
+			i = i+1;
 		}
 	}
+	printf("len\t - %d\n", buffer->len_buff);
+	printf("fr\t - %d\n", buffer->frequency);
 }
 
 //TODO:

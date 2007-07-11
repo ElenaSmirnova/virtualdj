@@ -104,11 +104,13 @@ extern "C" __declspec(dllexport) void read2(Buffer *buffer, char* name)
 	buffer->frequency = tw.freq;
 	byte *samp8 = tw.sample;
 	short int *samp16 = (short int *)tw.sample;
+
 	buffer->buff = (int  **)calloc(tw.len_data,sizeof(int  *));
 	for (i = 0; i < tw.len_data; i ++)
 	{
               buffer->buff[i]=(int *)calloc(2, sizeof(int));
 	}
+
 	i = 0;
 	if (tw.bits == 8)
 	{

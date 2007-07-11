@@ -1,10 +1,6 @@
 #pragma once
-#include <stdio.h>
-#include <stdlib.h>
-#include <vcclr.h>
 #include "resource.h"
-//#include "WinNT.h"
-//#include "uxtreme.h"
+
 
 namespace sound_processor {
 
@@ -150,10 +146,8 @@ namespace sound_processor {
 					 }
 
 					 if ((coefficient < 1)&&(coefficient > 0)) { //корректные данные
-						 int memoryBuffer[CANALS][LENGTH];
-						 int buffer[][6] = {{10000,20000,30000},{40000,50000,60000}};
-						 bool flagOfFirstUse = true;
-						 mainEcho(buffer, coefficient, flagOfFirstUse, memoryBuffer); //вызов процедуры Echo с нужными параметрами
+						 //bool flagOfFirstUse = true;
+						 //mainEcho(buffer, coefficient, flagOfFirstUse, memoryBuffer); //вызов процедуры Echo с нужными параметрами
 						 this->DialogResult = System::Windows::Forms::DialogResult::OK;
 						 Close();
 					 }else{

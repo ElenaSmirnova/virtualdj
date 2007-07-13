@@ -92,7 +92,6 @@ extern "C" __declspec(dllexport) void read2(SoundBuffer *buffer, char* name)
 	if ( strncmp(tw.id_data,"data",4)!=0 )
 		printf("problem - identificator DATA\n");
 
-	printf("length %ld", buffer->getLength());
 	if ((tw.bits == 16) && ( tw.channels == 2)){
 		buffer->setLength(tw.len_data/4);
 	}else{
@@ -135,8 +134,29 @@ extern "C" __declspec(dllexport) void read2(SoundBuffer *buffer, char* name)
 }
 
 //TODO:
-extern "C" __declspec(dllexport) void write(write_parameters* parameters)
-{}
+extern "C" __declspec(dllexport) void write2(SoundBuffer *buffer, char* name)
+{
+	char* name1 = "I:\\virtualdj\\Sp\\sound\\TC Delete Complete.wav";
+	char* name2 = "I:\\virtualdj\\Sp\\sound\\newfile.wav";
+	long int i;
+	i = 0;
+	FILE * f, *f1;
+	TitleWave tw;
+	//Buf bb;
+	
+	f = fopen(name1,"r");
+	if ( f == 0 ) { 
+		printf("Cannot open file - %s\n", name1);
+		return; 
+	}
+	fread(&tw,sizeof(TitleWave), 1, f);
+	fclose(f);
+
+	f1 = fopen(name2,"w+"); //create new file if it doesn't exist, else overwrite the file
+	fwrite(&tw,46, 1, f1); 
+	fwrite(buffer->buff, buffer->getLength(), 1, f1);
+	fclose(f1);
+}
 
 #ifdef _MANAGED
 #pragma managed(pop)

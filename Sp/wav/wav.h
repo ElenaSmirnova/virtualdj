@@ -35,5 +35,5 @@ typedef struct {
 
 extern "C" __declspec(dllexport) void read2(SoundBuffer *buffer, char* name);
 
-extern "C" __declspec(dllexport) void write(write_parameters* parameters);
+extern "C" __declspec(dllexport) void write2(SoundBuffer *buffer, char* name);
 

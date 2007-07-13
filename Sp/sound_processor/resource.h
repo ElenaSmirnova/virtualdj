@@ -13,5 +13,6 @@
 
 [DllImport("sound_effects.dll")]*/
 extern "C" void _cdecl read2(SoundBuffer *buffer, char* name);
+extern "C" void _cdecl write2(SoundBuffer *buffer, char* name);
 extern "C" int _cdecl mainEcho(SoundBuffer *buffer, float coefficient, bool flagOfFirstUse, SoundBuffer *memoryBuffer);
 extern "C" int _cdecl mainDistortion(int highLimit, int lowLimit, SoundBuffer *buffer);

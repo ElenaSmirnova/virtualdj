@@ -17,7 +17,7 @@ void printArray(SoundBuffer *buffer){
 
 int main()
 {
-	SoundBuffer *bufferFromUser = new SoundBuffer(NULL,6,40);
+	SoundBuffer *bufferFromUser = new SoundBuffer(NULL,6,60);
 	
 	bufferFromUser->buff = (int  **)calloc(bufferFromUser->getLength(),sizeof(int  *));
 	for (int i = 0; i < bufferFromUser->getLength(); i ++)

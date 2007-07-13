@@ -1,11 +1,6 @@
 
-
-
 #pragma once
 #include <string>
-
-
-
 
 const int SizeFormH = 6;
 const int SizeFormW = 13;
@@ -24,48 +19,40 @@ namespace test1 {
 	int const NumberGraphics = 2;
 	int const arraySise = 5;
 	int _array[arraySise];
+
+	bool IsInitialize = false;
     
 	public ref class hScrollBar1 : public System::Windows::Forms::HScrollBar
 	{
 	public:
-		hScrollBar1(int width, int height){
-		//InitializeScroll();
-		Size = System::Drawing::Size(width, 10);
-		Location = System::Drawing::Point(0, height-10);
-
-		}
-
-		//void pagePaint(Object^ /*sender*/, PaintEventArgs^ e);
-		//void MouseMove(Object^/*sender*/, MouseEventArgs^ e);
-		 virtual void OnSizeChanged (EventArgs^ e) override
+		int OldWidthPos;
+		int NewWidthPos;
+		hScrollBar1(int width, int height)
 		{
-            
-			Invalidate();
-			HScrollBar::OnSizeChanged(e);
+			OldWidthPos = 0;
+			NewWidthPos = 0;
+			Size = System::Drawing::Size(width, 15);
+			Location = System::Drawing::Point(0, height-15);
 		}
 
-		// void InitializeScroll(){
-			 //this->Paint += gcnew System::Windows::Forms::PaintEventHandler( this, &hScrollBar1::pagePaint );
-
-		 //}
-		
+    protected:
+	    virtual void OnScroll (ScrollEventArgs^ se) override
+		{
+			OldWidthPos = se->OldValue;
+			NewWidthPos = se->NewValue;
+			Invalidate();
+		}
 	};
+
+
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
-    
-
-			
-
-	public:
+    	public:
 		Form1(int NumberTabs)
 		{
-           
-			tabPage = gcnew array<System::Windows::Forms::TabPage^>(NumberTabs);
+          	tabPage = gcnew array<System::Windows::Forms::TabPage^>(NumberTabs);
             InitializeComponent(NumberTabs, arraySise);
-            
-		}
-        
-
+        }
 
 		void pagePaint(Object^ /*sender*/, PaintEventArgs^ e)
 		{
@@ -74,15 +61,14 @@ namespace test1 {
 			int const indent = 30;
 			int k = indent;
 			int w,h;
-			Rectangle rect = e->ClipRectangle;
+			System::Drawing::Rectangle rect = e->ClipRectangle;
 			w = (rect.Width);
 			h = (rect.Height)/NumberGraphics;
 			g->FillRectangle(Brushes::White, 0, 0, w, h);
-		
 			
 			// to make a calculation coefficient of stretching and pressing
-			float koefW = w/arraySise;
-			float koefH;
+			int koefW = w/arraySise;
+			int koefH;
 			int max = _array[0];
 			for (int i = 1; i < arraySise; i++)
 			{
@@ -99,7 +85,7 @@ namespace test1 {
             // draw graphics
 			for (int j = 1; j < arraySise; j++)
 			{	
-				g->FillEllipse(Brushes::Black, Rectangle((j+k),(h-koefH*_array[j-1]),4,4));
+				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle((j+k),(h-koefH*_array[j-1]),4,4));
 				g->DrawLine(Pens::Black, Point((j+k),(h-koefH*_array[j-1])), Point((j+k+koefW), (h-koefH*_array[j])));
 				k = k+koefW;
 			}
@@ -154,16 +140,17 @@ namespace test1 {
 				drawPoint = Point(indent-20, h-_array[i]*koefH);
 				e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   
 			}
-
-			/*System::Drawing::Size preferredSize = tabPage[0]->ClientSize::get();
-          
-			hScrollBar1^ hScrollBar = (gcnew hScrollBar1(preferredSize.Width,preferredSize.Height));
-           
-            this->tabPage[0]->Controls->Add(hScrollBar);*/
-				
-			//	hScrollBar->Size = System::Drawing::Size(w, 5);
-			//	hScrollBar->Location = System::Drawing::Point(0, h*NumberGraphics - 5);
 			
+			//addition the scrolling on tab
+			if (IsInitialize)
+			{
+				hScrollBar = (gcnew hScrollBar1(w,h*NumberGraphics));
+                this->tabPage[0]->Controls->Add(hScrollBar);
+				if (hScrollBar->OldWidthPos != hScrollBar->NewWidthPos)
+				{
+					g->DrawLine(Pens::Black, Point(20,20), Point(100,100));
+				}
+			}
 		}
 
 	protected:
@@ -180,12 +167,39 @@ namespace test1 {
 
         virtual void OnSizeChanged (EventArgs^ e) override
 		{
-            
-			
+			this->tabPage[0]->Controls->Remove(hScrollBar);
             Invalidate();
 			Form::OnSizeChanged(e);
 		}
 
+ 
+	void AddMyScrollEventHandlers()
+    {   
+		//hScrollBar1^ hScrollBar = gcnew hScrollBar1();   
+		hScrollBar->Scroll += gcnew ScrollEventHandler( this, &Form1::hScrollBar1_Scroll );
+		hScrollBar->ValueChanged += gcnew EventHandler( this, &Form1::hScrollBar1_ValueChanged );
+	}
+
+	void hScrollBar1_ValueChanged( Object^ /*sender*/, EventArgs^ /*e*/ )
+	{
+   
+		label1->Text = String::Format( "hScrollBar Value:(OnValueChanged Event) {0}", hScrollBar->Value );
+	}
+
+
+
+	void hScrollBar1_Scroll( Object^ /*sender*/, ScrollEventArgs^ e )
+   {   
+		label1->Text = String::Format( "VScrollBar Value:(OnScroll Event) {0}", e->NewValue );
+	}
+
+	void button1_Click( Object^ /*sender*/, EventArgs^ /*e*/ )
+	{   
+		if ( hScrollBar->Value + 40 < hScrollBar->Maximum )
+		{
+			hScrollBar->Value = hScrollBar->Value + 40;
+		}
+	}
 
 	protected: 
 	
@@ -195,6 +209,7 @@ namespace test1 {
 	private: TabControl^  tabControl1;
 	private: array<TabPage^> ^ tabPage;
 	private: hScrollBar1^  hScrollBar;
+	private: Label^ label1;
 	
 	    
 
@@ -216,15 +231,12 @@ namespace test1 {
 			this->printDialog1 = (gcnew System::Windows::Forms::PrintDialog());
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			
-			//hScrollBar1^ hScrollBar = (gcnew hScrollBar1(Drawing::Size::Width,Drawing::Size::Height));
-			
 			for (i = 0; i < NumberTabs; i++)
 			{
 				this->tabPage[i] = (gcnew System::Windows::Forms::TabPage());
 			};
             
 
-			
 			this->tabControl1->SuspendLayout();
 			this->SuspendLayout();
 
@@ -267,13 +279,7 @@ namespace test1 {
 				this->tabPage[i]->Click += gcnew System::EventHandler(this, &Form1::tabPage1_Click);
 			};
 
-			//drawing hScrollBar with the size of the client part of the window
-			System::Drawing::Size preferredSize = tabPage[0]->ClientSize::get();
-          
-			hScrollBar1^ hScrollBar = (gcnew hScrollBar1(preferredSize.Width,preferredSize.Height));
-           
-            this->tabPage[0]->Controls->Add(hScrollBar);
-			
+					
 			// Form1
 			 
 			this->AutoScaleDimensions = System::Drawing::SizeF(SizeFormH, SizeFormW);
@@ -286,6 +292,8 @@ namespace test1 {
 			this->Text = L"Form1";
 			this->tabControl1->ResumeLayout(false);
 			this->ResumeLayout(false);
+
+			IsInitialize = true;
 
 		}
 #pragma endregion

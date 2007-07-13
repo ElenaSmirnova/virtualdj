@@ -7,8 +7,8 @@ void main()
     printf("Start\n");
     //TODO:
     //вызов функции из динамической библиотеки wav
-	Buffer *nullBuffer = new Buffer();
-    read2(nullBuffer, "I:\\virtualdj\\Sp\\sound\\TC Delete Complete.wav");
+	SoundBuffer *nullBuffer = new SoundBuffer(NULL, 0, 0);
+    read2(nullBuffer, "C:\\temp\\newVirtualDj\\sound\\asteroidexplode.wav");
 
     printf("Stop\n");
 	getch();

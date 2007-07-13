@@ -28,12 +28,12 @@ typedef struct {
 	long len_data;//  - длина выборки
 
 	byte sample[1000768];//- массив из амплитуд;
-	} TitleWave;
+} TitleWave;
 
 
 #pragma pack(pop)
 
-extern "C" __declspec(dllexport) void read2(Buffer *buffer, char* name);
+extern "C" __declspec(dllexport) void read2(SoundBuffer *buffer, char* name);
 
 extern "C" __declspec(dllexport) void write(write_parameters* parameters);
 

@@ -37,7 +37,7 @@ void appropriate1(int **toArray, const byte *fromArray,long int columns,int chan
 }//разделяет одномерный массив на две строчки двумерного массива (8 bits)
 void appropriate2(int **toArray, short int *fromArray, long int columns,int channell)
 {
-	int i1,len;
+	int i1;
 	i1 = 0;
 	if (channell == 2)
 	{
@@ -59,7 +59,7 @@ void appropriate2(int **toArray, short int *fromArray, long int columns,int chan
 		}
 	} 
 }//разделяет одномерный массив на две строчки двумерного массива (16 bits)
-extern "C" __declspec(dllexport) void read2(Buffer *buffer, char* name)
+extern "C" __declspec(dllexport) void read2(SoundBuffer *buffer, char* name)
 {
 	int i = 0;
 	FILE * f;
@@ -92,24 +92,16 @@ extern "C" __declspec(dllexport) void read2(Buffer *buffer, char* name)
 	if ( strncmp(tw.id_data,"data",4)!=0 )
 		printf("problem - identificator DATA\n");
 
-	if ((tw.bits == 16) && ( tw.channels == 2)) 
-	{
-		buffer->len_buff = tw.len_data/4;
-	}
-	else 
-	{
-		buffer->len_buff = tw.len_data;
+	printf("length %ld", buffer->getLength());
+	if ((tw.bits == 16) && ( tw.channels == 2)){
+		buffer->setLength(tw.len_data/4);
+	}else{
+		buffer->setLength(tw.len_data);
 	}
 
 	buffer->frequency = tw.freq;
 	byte *samp8 = tw.sample;
 	short int *samp16 = (short int *)tw.sample;
-
-	buffer->buff = (int  **)calloc(tw.len_data,sizeof(int  *));
-	for (i = 0; i < tw.len_data; i ++)
-	{
-              buffer->buff[i]=(int *)calloc(2, sizeof(int));
-	}
 
 	i = 0;
 	if (tw.bits == 8)
@@ -138,7 +130,7 @@ extern "C" __declspec(dllexport) void read2(Buffer *buffer, char* name)
 			i = i+1;
 		}
 	}
-	printf("len\t - %d\n", buffer->len_buff);
+	printf("len\t - %d\n", buffer->getLength());
 	printf("fr\t - %d\n", buffer->frequency);
 }
 

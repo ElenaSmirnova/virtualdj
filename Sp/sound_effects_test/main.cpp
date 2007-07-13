@@ -6,9 +6,9 @@
 using namespace std;
 
 
-void printArray(Buffer *buffer){
+void printArray(SoundBuffer *buffer){
 	for (int i=0; i<CANALS; i++){
-		for(int j=0; j<buffer->len_buff; j++){
+		for(int j=0; j<buffer->getLength(); j++){
 			cout << buffer->buff[j][i] << " ";
 		}
 		cout << "\n";
@@ -17,20 +17,32 @@ void printArray(Buffer *buffer){
 
 int main()
 {
-	Buffer *bufferFromUser = new Buffer();
-	bufferFromUser->len_buff = 6;
+	SoundBuffer *bufferFromUser = new SoundBuffer(NULL,6,40);
 	
-	bufferFromUser->buff = (int  **)calloc(bufferFromUser->len_buff,sizeof(int  *));
-	for (int i = 0; i < bufferFromUser->len_buff; i ++)
+	bufferFromUser->buff = (int  **)calloc(bufferFromUser->getLength(),sizeof(int  *));
+	for (int i = 0; i < bufferFromUser->getLength(); i ++)
 	{
               bufferFromUser->buff[i]=(int *)calloc(2, sizeof(int));
 	}
 
-	for (int j = 0; j < bufferFromUser->len_buff; j++){
+	/*for (int j = 0; j < bufferFromUser->getLength(); j++){
 		for (int i = 0; i < CANALS; i++){
 			bufferFromUser->buff[j][i] = - RAND_MAX/2 + rand();
 		}
-	}
+	}*/
+
+	bufferFromUser->buff[0][0] = 10;
+	bufferFromUser->buff[0][1] = 70;
+	bufferFromUser->buff[1][0] = 20;
+	bufferFromUser->buff[1][1] = 80;
+	bufferFromUser->buff[2][0] = 30;
+	bufferFromUser->buff[2][1] = 90;
+	bufferFromUser->buff[3][0] = 40;
+	bufferFromUser->buff[3][1] = 100;
+	bufferFromUser->buff[4][0] = 50;
+	bufferFromUser->buff[4][1] = 110;
+	bufferFromUser->buff[5][0] = 60;
+	bufferFromUser->buff[5][1] = 120;
 
 	printArray(bufferFromUser);
 
@@ -42,12 +54,11 @@ int main()
 	}
 
 	float coefficient = 0.9;
-	Buffer *memoryBuffer = new Buffer();
-
-	memoryBuffer->buff = (int  **)calloc(bufferFromUser->len_buff,sizeof(int  *));
-	for (int i = 0; i < bufferFromUser->len_buff; i ++)
+	SoundBuffer *memoryBuffer = new SoundBuffer(NULL, bufferFromUser->getLength(),bufferFromUser->frequency);
+	memoryBuffer->buff = (int  **)calloc(memoryBuffer->getLength(),sizeof(int  *));
+	for (int i = 0; i < memoryBuffer->getLength(); i ++)
 	{
-              bufferFromUser->buff[i]=(int *)calloc(2, sizeof(int));
+              memoryBuffer->buff[i]=(int *)calloc(2, sizeof(int));
 	}
 
 	if (0 == mainEcho(bufferFromUser, coefficient, true, memoryBuffer)){
@@ -56,7 +67,7 @@ int main()
 	}else{
 		cout << "first mainEcho exit with error\n";
 	}
-	if (0 == mainEcho(bufferFromUser, coefficient, false, memoryBuffer)){
+	if (0 == mainEcho(bufferFromUser, 0, false, memoryBuffer)){
 		cout << "\nsecond echoed buffer\n";
 		printArray(bufferFromUser);
 	}else{

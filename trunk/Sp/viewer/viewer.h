@@ -6,8 +6,9 @@
 #include "..\wav\structure.h"
 
 //TODO:
-typedef  void view_parameters;
+//typedef  void view_parameters;
 
-extern "C" __declspec(dllexport) void view(Buffer* buf);
+extern "C" __declspec(dllexport) void view(SoundBuffer* buf);
+
 
 

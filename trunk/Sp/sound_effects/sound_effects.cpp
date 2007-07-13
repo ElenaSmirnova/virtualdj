@@ -3,10 +3,9 @@
 
 #include "sound_effects.h"
 #include <iostream>
+#include <math.h>
 using namespace std;
 
-
-#define DELAY 2
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -33,9 +32,9 @@ buffer - массив с данными
 buffer - массив с уже обрезанными амплитудами
 ***************************************/
 
-bool distortion(int highLimit, int lowLimit, Buffer *buffer){
+bool distortion(int highLimit, int lowLimit, SoundBuffer *buffer){
 		for (int i = 0; i < CANALS; i++){
-			for (int j = 0; j < buffer->len_buff; j++){
+			for (int j = 0; j < buffer->getLength(); j++){
 				if (buffer->buff[j][i] != NULL) {
 					if (buffer->buff[j][i] > highLimit) { buffer->buff[j][i] = highLimit; }
 					else{
@@ -47,7 +46,7 @@ bool distortion(int highLimit, int lowLimit, Buffer *buffer){
 		return true;
 }
 
-extern "C" __declspec(dllexport) int mainDistortion(int highLimit, int lowLimit, Buffer *buffer)
+extern "C" __declspec(dllexport) int mainDistortion(int highLimit, int lowLimit, SoundBuffer *buffer)
 {
 	bool distResult = false;
 
@@ -89,8 +88,9 @@ memoryBuffer - буффер, который был послан на обработку. может использоваться для
 ***************************************/
 
 float coeff = 1;
+int DELAY;
 
-void appropriate(Buffer *toMatrix, Buffer *fromMatrix, int columns){
+void appropriate(SoundBuffer *toMatrix, SoundBuffer *fromMatrix, int columns){
 	for (int i = 0; i < CANALS; i++){
 		for (int j=0; j<columns; j++){
 			toMatrix->buff[j][i] = fromMatrix->buff[j][i];
@@ -101,59 +101,68 @@ void appropriate(Buffer *toMatrix, Buffer *fromMatrix, int columns){
 void echo(int** toBuffer,int** fromBuffer, int length){
 	for (int j=0; j<length; j++){
 		for (int i=0; i<CANALS; i++){
-			toBuffer[j][i] = (int) (coeff*fromBuffer[j][i]);
+			float result = coeff*fromBuffer[j][i];
+			toBuffer[j][i] = floor(0.5 + result);
 		}
 	}
-}//умножаем одномерный массив на коэффициент
+}
 
-int sumBuffers(Buffer *buffer,Buffer *memoryBuffer){
+int sumBuffers(SoundBuffer *buffer,SoundBuffer *memoryBuffer){
 	//int* firstEcho= new int[buffer->len_buff];//массив для первого эха
-	int** firstEcho = (int  **)calloc(buffer->len_buff,sizeof(int  *));
-	for (int i = 0; i < buffer->len_buff; i ++)
+	int** firstEcho = (int  **)calloc(buffer->getLength(),sizeof(int  *));
+	for (int i = 0; i < buffer->getLength(); i ++)
 	{
-              buffer->buff[i]=(int *)calloc(2, sizeof(int));
+              firstEcho[i]=(int *)calloc(2, sizeof(int));
 	}
 
 	//int* secondEcho = new int[buffer->len_buff];//массив для второго эха
-	int** secondEcho = (int  **)calloc(buffer->len_buff,sizeof(int  *));
-	for (int i = 0; i < buffer->len_buff; i ++)
+	int** secondEcho = (int  **)calloc(buffer->getLength(),sizeof(int  *));
+	for (int i = 0; i < buffer->getLength(); i ++)
 	{
-              buffer->buff[i]=(int *)calloc(2, sizeof(int));
+              secondEcho[i]=(int *)calloc(2, sizeof(int));
 	}
 
-	int firstMemoryBuffer[CANALS][DELAY];//массив для остатка от первого эха
-	int secondMemoryBuffer[CANALS][2*DELAY];//массив для остатка от второго эха
+	//массив для остатка от первого эха
+	int** firstMemoryBuffer = (int  **)calloc(DELAY,sizeof(int *));
+	for (int i = 0; i < DELAY; i++){
+              firstMemoryBuffer[i]=(int *)calloc(2, sizeof(int));
+	}
+	//массив для остатка от второго эха
+	int** secondMemoryBuffer = (int  **)calloc(2*DELAY,sizeof(int  *));
+	for (int i = 0; i < 2*DELAY; i ++){
+              secondMemoryBuffer[i]=(int *)calloc(2, sizeof(int));
+	}
 
 	for (int j=0; j<CANALS; j++){
 		if (memoryBuffer->buff != NULL) {//если уже не первый буффер со звуком
 			for (int i=0; i<2*DELAY; i++){
-				secondMemoryBuffer[j][i] = memoryBuffer->buff[buffer->len_buff - 2*DELAY + i][j];
+				secondMemoryBuffer[i][j] = memoryBuffer->buff[buffer->getLength() - 2*DELAY + i][j];
 			}
 			for (int i=0; i<DELAY; i++){
-				firstMemoryBuffer[j][i] = (int)memoryBuffer->buff[buffer->len_buff - DELAY +i][j];
+				firstMemoryBuffer[i][j] = (int)memoryBuffer->buff[buffer->getLength() - DELAY +i][j];
 			}
 		}else{//если начало песни, то есть обрабатываем первый буффер со свуком
 			for (int i=0; i<2*DELAY; i++){
-				secondMemoryBuffer[j][i] = 0;
+				secondMemoryBuffer[i][j] = 0;
 			}
 			for (int i=0; i<DELAY; i++){
-				firstMemoryBuffer[j][i] = 0;
+				firstMemoryBuffer[i][j] = 0;
 			}
 		}
 	}
 
 	if (NULL != buffer->buff){
-		echo(firstEcho, buffer->buff, buffer->len_buff);//получили первое эхо
-		echo(secondEcho,firstEcho, buffer->len_buff);//получили второе эхо
+		echo(firstEcho, buffer->buff, buffer->getLength());//получили первое эхо
+		echo(secondEcho,firstEcho, buffer->getLength());//получили второе эхо
 		
 		echo((int**)firstMemoryBuffer, (int**)firstMemoryBuffer,DELAY);//получили первое эхо остатка
 		echo((int**)secondMemoryBuffer, (int**)secondMemoryBuffer, 2*DELAY);
 		echo((int**)secondMemoryBuffer, (int**)secondMemoryBuffer, 2*DELAY);//получили второе эхо остатка
-				
-		for (int j=0; j<buffer->len_buff; j++){
+		
+		for (int j=0; j<buffer->getLength(); j++){
 			for (int i=0; i<CANALS; i++){
-				if (j<DELAY) {buffer->buff[j][i] = buffer->buff[j][i] + firstMemoryBuffer[i][j];}
-				if (j<2*DELAY) {buffer->buff[j][i] = buffer->buff[j][i] + secondMemoryBuffer[i][j];}
+				if (j<DELAY) {buffer->buff[j][i] = buffer->buff[j][i] + firstMemoryBuffer[j][i];}
+				if (j<2*DELAY) {buffer->buff[j][i] = buffer->buff[j][i] + secondMemoryBuffer[j][i];}
 				if (j>=DELAY) {buffer->buff[j][i] = buffer->buff[j][i] + firstEcho[j-DELAY][i];}
 				if (j>=2*DELAY) {buffer->buff[j][i] = buffer->buff[j][i] + secondEcho[j-2*DELAY][i];}
 			}
@@ -163,37 +172,42 @@ int sumBuffers(Buffer *buffer,Buffer *memoryBuffer){
 	return 0;
 }
 
-void setMemory(Buffer *buffer, bool flagOfFirstUse, Buffer *memoryBuffer){
+void setMemory(SoundBuffer *buffer, bool flagOfFirstUse, SoundBuffer *memoryBuffer){
 	if (flagOfFirstUse){
 		for (int i=0; i<CANALS; i++){
-			for (int j=0; j<buffer->len_buff; j++){
+			for (int j=0; j<memoryBuffer->getLength(); j++){
 				memoryBuffer->buff[i][j] = NULL;
 			}
 		}
 	}
 	
-	Buffer *tempMemoryBuffer = new Buffer();
-
-	appropriate(tempMemoryBuffer,buffer,buffer->len_buff);
+	SoundBuffer *tempMemoryBuffer = new SoundBuffer(NULL, buffer->getLength(), buffer->frequency);
+	
+	appropriate(tempMemoryBuffer,buffer,buffer->getLength());
 	if (!flagOfFirstUse) {
 		sumBuffers(buffer,memoryBuffer);
 	}else{
-		sumBuffers(buffer, new Buffer());
+		sumBuffers(buffer, new SoundBuffer(NULL, buffer->getLength(), buffer->frequency));
 	}
 	
 	for (int i=0; i<CANALS; i++){
-		appropriate(memoryBuffer,tempMemoryBuffer,buffer->len_buff);
+		appropriate(memoryBuffer,tempMemoryBuffer,buffer->getLength());
 	}
 }
 
-extern "C" __declspec(dllexport) int mainEcho(Buffer *buffer, float coefficient, bool flagOfFirstUse, Buffer *memoryBuffer){
-	while ((coefficient < 0) || (coefficient >1)){
+extern "C" __declspec(dllexport) int mainEcho(SoundBuffer *buffer, float coefficient, bool flagOfFirstUse, SoundBuffer *memoryBuffer){
+	if ((coefficient <= 0) || (coefficient >1)){
 		cout << "\nSorry, but coefficient must be in [0,1]\n";
+		return 1;
+	}
+	if (buffer->frequency <= 0) {
+		cout << "Sorry, error with the digitization\n";
 		return 1;
 	}
 
 	coeff = coefficient;
 	if (buffer != NULL){
+		DELAY = floor((buffer->frequency/20)+0.5);
 		setMemory(buffer, flagOfFirstUse, memoryBuffer);
 	}else{ 
 		cout << "The buffer is empty\n";

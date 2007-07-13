@@ -127,7 +127,6 @@ namespace sound_processor {
 					wch, sizeInBytes);
 
 				 if (coefficientInChar != NULL) {
-
 					 //перевод из char* в float
 					 int intCoefficient = 0;
 					 int placeOfPoint = 0;
@@ -439,7 +438,8 @@ private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventAr
                     NameOfTheOpenedFile, sizeInBytes,
                     wch, sizeInBytes);
 
-				read2(NameOfTheOpenedFile);
+				SoundBuffer *buffer = new SoundBuffer(NULL, 0, 0);
+				read2(buffer,NameOfTheOpenedFile);
 				fileName = fileName->Remove( 0, fileName->LastIndexOf('\\')+1 );
 				outputString = String::Concat("Open ",fileName);
 			 }

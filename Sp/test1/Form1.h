@@ -34,14 +34,6 @@ namespace test1 {
 			Size = System::Drawing::Size(width, 15);
 			Location = System::Drawing::Point(0, height-15);
 		}
-
-    protected:
-	    virtual void OnScroll (ScrollEventArgs^ se) override
-		{
-			OldWidthPos = se->OldValue;
-			NewWidthPos = se->NewValue;
-			Invalidate();
-		}
 	};
 
 
@@ -57,7 +49,7 @@ namespace test1 {
 		void pagePaint(Object^ /*sender*/, PaintEventArgs^ e)
 		{
 			Graphics^ g = e->Graphics;     
-			_array[0] = 40; _array[1] = 36; _array[2] = 56; _array[3] = 45; _array[4] = 80;
+			_array[0] = 5; _array[1] = 0; _array[2] = -40; _array[3] = 0; _array[4] = 40;
 			int const indent = 30;
 			int k = indent;
 			int w,h;
@@ -79,14 +71,14 @@ namespace test1 {
 			}
 			if (max != 0)
 			{
-				koefH = (h-h/20)/max;
+				koefH = (h-h/20)/(max*2);
 			}
 
             // draw graphics
 			for (int j = 1; j < arraySise; j++)
 			{	
-				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle((j+k),(h-koefH*_array[j-1]),4,4));
-				g->DrawLine(Pens::Black, Point((j+k),(h-koefH*_array[j-1])), Point((j+k+koefW), (h-koefH*_array[j])));
+				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle(k,h-indent-(h-indent-10)/2-koefH*_array[j-1],4,4));
+				g->DrawLine(Pens::Black, Point(k,h-indent-(h-indent-10)/2-koefH*_array[j-1]), Point(k+koefW, h-indent-(h-indent-10)/2-koefH*_array[j]));
 				k = k+koefW;
 			}
 
@@ -94,11 +86,11 @@ namespace test1 {
 			for ( int counter = 1; counter <= NumberGraphics; counter++)
 			{
 				g->DrawLine(Pens::Black, Point(indent, h*counter-indent), Point(indent,h*(counter-1)+10));
-				g->DrawLine(Pens::Black, Point(indent, h*counter-indent), Point(w-10,h*counter-indent));
+				g->DrawLine(Pens::Black, Point(indent, h*counter-indent-(h-indent-10)/2), Point(w-10,h*counter-indent-(h-indent-10)/2));
 
 			// draw direction of coordinate line
-				g->DrawLine(Pens::Black, Point(w-10-5, h*counter-indent-2), Point(w-10,h*counter-indent));
-				g->DrawLine(Pens::Black, Point(w-10-5, h*counter-indent+2), Point(w-10,h*counter-indent));
+				g->DrawLine(Pens::Black, Point(w-10-5, h*counter-indent-(h-indent-10)/2-2), Point(w-10,h*counter-(h-indent-10)/2-indent));
+				g->DrawLine(Pens::Black, Point(w-10-5, h*counter-indent-(h-indent-10)/2+2), Point(w-10,h*counter-indent-(h-indent-10)/2));
 				g->DrawLine(Pens::Black, Point(indent-2,h*(counter-1)+10+5), Point(indent,h*(counter-1)+10));
 				g->DrawLine(Pens::Black, Point(indent+2,h*(counter-1)+10+5), Point(indent,h*(counter-1)+10));
 			}
@@ -126,30 +118,19 @@ namespace test1 {
 			for(int i = 1; i < arraySise; i++)
 			{
 				System::Drawing::Font^ drawFont = gcnew System::Drawing::Font( "Arial",7 );
-				g->DrawLine(Pens::Black, Point(indent+i*koefW,h-(indent-2)), Point(indent+i*koefW, h-(indent+2)));
+				g->DrawLine(Pens::Black, Point(indent+i*koefW,h-(indent-2)-(h-indent-10)/2), Point(indent+i*koefW, h-(indent+2)-(h-indent-10)/2));
 				itoa(i, &str, 10);
 				str2 = gcnew String(&str);
 				drawString = str2;
-				drawPoint = Point(indent+i*koefW, h-(indent));
+				drawPoint = Point(indent+i*koefW, h-indent-(h-indent-10)/2);
 				e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   
 
 				g->DrawLine(Pens::Black, Point(indent-2, h-_array[i]*koefH), Point(indent+2, h-_array[i]*koefH));
 				itoa(_array[i], &str, 10);
 				str2 = gcnew String(&str);
 				drawString = str2;
-				drawPoint = Point(indent-20, h-_array[i]*koefH);
+				drawPoint = Point(indent-20, h-indent-(h-indent-10)/2-koefH*_array[i]);
 				e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   
-			}
-			
-			//addition the scrolling on tab
-			if (IsInitialize)
-			{
-				hScrollBar = (gcnew hScrollBar1(w,h*NumberGraphics));
-                this->tabPage[0]->Controls->Add(hScrollBar);
-				if (hScrollBar->OldWidthPos != hScrollBar->NewWidthPos)
-				{
-					g->DrawLine(Pens::Black, Point(20,20), Point(100,100));
-				}
 			}
 		}
 
@@ -167,48 +148,23 @@ namespace test1 {
 
         virtual void OnSizeChanged (EventArgs^ e) override
 		{
-			this->tabPage[0]->Controls->Remove(hScrollBar);
+			//this->tabPage[0]->Controls->Remove(hScrollBar);
             Invalidate();
 			Form::OnSizeChanged(e);
 		}
 
- 
-	void AddMyScrollEventHandlers()
-    {   
-		//hScrollBar1^ hScrollBar = gcnew hScrollBar1();   
-		hScrollBar->Scroll += gcnew ScrollEventHandler( this, &Form1::hScrollBar1_Scroll );
-		hScrollBar->ValueChanged += gcnew EventHandler( this, &Form1::hScrollBar1_ValueChanged );
-	}
+		virtual void OnScroll(ScrollEventArgs^se) override
+        {
+            Invalidate();
+			Form::OnScroll(se);
 
-	void hScrollBar1_ValueChanged( Object^ /*sender*/, EventArgs^ /*e*/ )
-	{
-   
-		label1->Text = String::Format( "hScrollBar Value:(OnValueChanged Event) {0}", hScrollBar->Value );
-	}
-
-
-
-	void hScrollBar1_Scroll( Object^ /*sender*/, ScrollEventArgs^ e )
-   {   
-		label1->Text = String::Format( "VScrollBar Value:(OnScroll Event) {0}", e->NewValue );
-	}
-
-	void button1_Click( Object^ /*sender*/, EventArgs^ /*e*/ )
-	{   
-		if ( hScrollBar->Value + 40 < hScrollBar->Maximum )
-		{
-			hScrollBar->Value = hScrollBar->Value + 40;
-		}
-	}
+        }
 
 	protected: 
 	
-
-
 	private: PrintDialog^  printDialog1;
 	private: TabControl^  tabControl1;
 	private: array<TabPage^> ^ tabPage;
-	private: hScrollBar1^  hScrollBar;
 	private: Label^ label1;
 	
 	    
@@ -293,7 +249,10 @@ namespace test1 {
 			this->tabControl1->ResumeLayout(false);
 			this->ResumeLayout(false);
 
-			IsInitialize = true;
+			System::Windows::Forms::Form::AutoScroll = true;
+            this->VScroll = false;
+
+			//IsInitialize = true;
 
 		}
 #pragma endregion

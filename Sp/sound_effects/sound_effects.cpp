@@ -216,8 +216,13 @@ extern "C" __declspec(dllexport) int mainEcho(SoundBuffer *buffer, float coeffic
 
 	return 0;
 }
-extern "C" __declspec(dllexport) void sound_effect(eff_parameters* parameters)
-{}
+extern "C" __declspec(dllexport) void sound_effect(SoundBuffer *buffer)
+{
+	if (buffer->buff != NULL) {
+	}else{
+		return 1;
+	}
+}
 
 #ifdef _MANAGED
 #pragma managed(pop)

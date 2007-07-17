@@ -415,7 +415,7 @@ namespace sound_processor {
 			//COMPOBOX_EFFECTS
 			//
 			this->COMPOBOX_EFFECTS->FormattingEnabled = true;
-			this->COMPOBOX_EFFECTS->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Echo", L"Distortion"});
+			this->COMPOBOX_EFFECTS->Items->AddRange(gcnew cli::array< System::Object^  >(3) {L"Echo", L"Distortion", L"Sound effect"});
 			this->COMPOBOX_EFFECTS->Location = System::Drawing::Point(12, 95);
 			this->COMPOBOX_EFFECTS->Name = L"COMPOBOX_EFFECTS";
 			this->COMPOBOX_EFFECTS->Size = System::Drawing::Size(121, 21);
@@ -466,6 +466,7 @@ private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventAr
 				exampleBuffer = new SoundBuffer(NULL, buffer->getLength(), buffer->frequency);
 				appropriate(exampleBuffer, buffer);
 				exampleMemoryBuffer = new SoundBuffer(NULL, buffer->getLength(), buffer->frequency);
+
 				fileName = fileName->Remove( 0, fileName->LastIndexOf('\\')+1 );
 				outputString = String::Concat("Open ",fileName);
 			 }
@@ -514,6 +515,11 @@ private: System::Void COMPOBOX_EFFECTS_SelectedIndexChanged(System::Object^  sen
 					if (dlgResult == System::Windows::Forms::DialogResult::OK) {
 						this->LABELSTATE->Text = L"Echo...";
 					}
+				 }else{
+					 if (this->COMPOBOX_EFFECTS->SelectedItem->Equals("Sound effect")){
+						sound_effect(exampleBuffer);
+						this->LABELSTATE->Text = L"Sound effect...";
+					 }
 				 }
 			 }
 		 }

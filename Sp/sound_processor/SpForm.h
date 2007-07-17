@@ -99,6 +99,7 @@ namespace sound_processor {
 			this->BUTTON_OK->Text = L"OK";
 			this->BUTTON_OK->UseVisualStyleBackColor = true;
 			this->BUTTON_OK->Click += gcnew System::EventHandler(this, &SpFormEchoDialog::BUTTON_OK_Click);
+			
 			// 
 			// SpFormEchoDialog
 			// 
@@ -430,6 +431,7 @@ namespace sound_processor {
 			this->LABELSTATE->Size = System::Drawing::Size(292, 18);
 			this->LABELSTATE->TabIndex = 4;
 
+			this->Closing += gcnew CancelEventHandler(this,&SpForm::formOnClosing);
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(292, 213);
@@ -515,24 +517,19 @@ private: System::Void COMPOBOX_EFFECTS_SelectedIndexChanged(System::Object^  sen
 				 }
 			 }
 		 }
-/*private: virtual System::Void OnClosed(System::EventArgs^  e) override {
+private: virtual System::Void formOnClosing(System::Object^ sender,CancelEventArgs^  e) override {
 			 if (this->BUTTON_CONVERT->DialogResult != System::Windows::Forms::DialogResult::OK){
 				 System::Windows::Forms::DialogResult dlgResult = MessageBox::Show(L"You haven't saved changes.\n Would you like to save it?", L"Sound processor", 
 					 MessageBoxButtons::YesNoCancel, MessageBoxIcon::Warning);
 				 if (dlgResult == System::Windows::Forms::DialogResult::Yes){
-					 System::Object^ sender = gcnew System::Object();
 					 BUTTON_CONVERT_Click(sender, e);
 				 }else{
 					 if (dlgResult == System::Windows::Forms::DialogResult::Cancel){
-						 return;
-					 }else{
-						 if (dlgResult == System::Windows::Forms::DialogResult::No){
-							 this->Close();
-						 }
+						 e->Cancel = true;
 					 }
 				 }
 			 }
-		}*/
+		}
 		 void appropriate(SoundBuffer *toBuffer, SoundBuffer *fromBuffer){
 				 if (toBuffer->getLength() != fromBuffer->getLength()){
 					 return;

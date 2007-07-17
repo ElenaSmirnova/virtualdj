@@ -21,7 +21,7 @@ namespace test1 {
 	int _array[arraySise];
 
 	bool IsInitialize = false;
-    
+    /*
 	public ref class hScrollBar1 : public System::Windows::Forms::HScrollBar
 	{
 	public:
@@ -34,26 +34,30 @@ namespace test1 {
 			Size = System::Drawing::Size(width, 15);
 			Location = System::Drawing::Point(0, height-15);
 		}
-	};
+	};*/
 
 
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
     	public:
+			Graphics^ g1;
+			System::Drawing::Rectangle rect1;
 		Form1(int NumberTabs)
 		{
           	tabPage = gcnew array<System::Windows::Forms::TabPage^>(NumberTabs);
             InitializeComponent(NumberTabs, arraySise);
         }
 
-		void pagePaint(Object^ /*sender*/, PaintEventArgs^ e)
+		void pagePaint(Object^ sender, PaintEventArgs^ e)
 		{
-			Graphics^ g = e->Graphics;     
+			Graphics^ g = e->Graphics;  
+			g1=g;
 			_array[0] = 5; _array[1] = 0; _array[2] = -40; _array[3] = 0; _array[4] = 40;
 			int const indent = 30;
 			int k = indent;
 			int w,h;
 			System::Drawing::Rectangle rect = e->ClipRectangle;
+			rect1 = rect;
 			w = (rect.Width);
 			h = (rect.Height)/NumberGraphics;
 			g->FillRectangle(Brushes::White, 0, 0, w, h);
@@ -150,6 +154,7 @@ namespace test1 {
 		{
 			//this->tabPage[0]->Controls->Remove(hScrollBar);
             Invalidate();
+			//Update();
 			Form::OnSizeChanged(e);
 		}
 
@@ -157,6 +162,11 @@ namespace test1 {
         {
             Invalidate();
 			Form::OnScroll(se);
+		//	PaintEventArgs^ s = (gcnew PaintEventArgs(g1, rect1));
+		//	s->
+		//	s->Graphics=g1;//this->tabControl1->TabPages[0]->CreateGraphics();
+		//	s->ClipRectangle= rect1 ;//this->tabControl1->TabPages[0]->create
+		//	this->OnPaint(s);
 
         }
 
@@ -186,7 +196,7 @@ namespace test1 {
 			int i;
 			this->printDialog1 = (gcnew System::Windows::Forms::PrintDialog());
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
-			
+
 			for (i = 0; i < NumberTabs; i++)
 			{
 				this->tabPage[i] = (gcnew System::Windows::Forms::TabPage());

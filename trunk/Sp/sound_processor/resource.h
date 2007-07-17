@@ -9,8 +9,6 @@
 
 #define CANALS 2
 /*[DllImport("wav.dll")]
-
-
 [DllImport("sound_effects.dll")]*/
 extern "C" void _cdecl read2(SoundBuffer *buffer, char* name);
 extern "C" void _cdecl write2(SoundBuffer *buffer, char* name);

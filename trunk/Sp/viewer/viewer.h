@@ -3,7 +3,7 @@
 
 #include <windows.h>
 #include <stdio.h>
-#include "..\wav\structure.h"
+#include "..\wav\wav.h"
 
 //TODO:
 //typedef  void view_parameters;

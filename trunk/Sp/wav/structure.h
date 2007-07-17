@@ -1,7 +1,32 @@
-typedef struct SoundBuffer {
+#include <windows.h>
+#include <stdio.h>
+
+typedef struct {
+	char id_riff[4];//- идентификатор файла = "RIFF" = 0x46464952
+    long len_riff;//- длина файла без этого заголовка
+
+	char id_chuck[4];//- идентификатор = "WAVE" = 0x45564157
+	char fmt[4];//- идентификатор = "fmt " = 0x20746D66
+	long len_chuck; //- длина этого куска WAV - файла,
+
+	short int  type; //- тип звуковых данных
+	short int  channels;//- число каналов
+	long freq;//- частота выборки 
+	long bytes;//- частота выдачи байтов
+	short int  align;//- выравнивание
+	short int  bits;//- число бит на выборку
+
+	char id_data[4];//- идентификатор ="data" =0x61746164
+	long len_data;//  - длина выборки
+
+	byte sample[1000768];//- массив из амплитуд;
+} TitleWave;
+
+struct SoundBuffer {
 public:
 	int **buff;// - указатель
 	long frequency;// частота выборки
+	TitleWave titleWave;
 private:
 	long len_buff;// - длина динамического массива
 public:

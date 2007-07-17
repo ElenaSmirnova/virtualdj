@@ -129,6 +129,9 @@ extern "C" __declspec(dllexport) void read2(SoundBuffer *buffer, char* name)
 			i = i+1;
 		}
 	}
+
+	buffer->titleWave = tw;
+
 	printf("len\t - %d\n", buffer->getLength());
 	printf("fr\t - %d\n", buffer->frequency);
 }
@@ -136,24 +139,11 @@ extern "C" __declspec(dllexport) void read2(SoundBuffer *buffer, char* name)
 //TODO:
 extern "C" __declspec(dllexport) void write2(SoundBuffer *buffer, char* name)
 {
-	char* name1 = "I:\\virtualdj\\Sp\\sound\\TC Delete Complete.wav";
-	char* name2 = "I:\\virtualdj\\Sp\\sound\\newfile.wav";
-	long int i;
-	i = 0;
-	FILE * f, *f1;
+	FILE *f1;
 	TitleWave tw;
-	//Buf bb;
 	
-	f = fopen(name1,"r");
-	if ( f == 0 ) { 
-		printf("Cannot open file - %s\n", name1);
-		return; 
-	}
-	fread(&tw,sizeof(TitleWave), 1, f);
-	fclose(f);
-
-	f1 = fopen(name2,"w+"); //create new file if it doesn't exist, else overwrite the file
-	fwrite(&tw,46, 1, f1); 
+	f1 = fopen(name,"w+"); //create new file if it doesn't exist, else overwrite the file
+	fwrite(&(buffer->titleWave),46, 1, f1); 
 	fwrite(buffer->buff, buffer->getLength(), 1, f1);
 	fclose(f1);
 }

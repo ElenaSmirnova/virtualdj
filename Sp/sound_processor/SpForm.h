@@ -515,19 +515,24 @@ private: System::Void COMPOBOX_EFFECTS_SelectedIndexChanged(System::Object^  sen
 				 }
 			 }
 		 }
-private: System::Void OnClosed(System::EventArgs^  e) {
+/*private: virtual System::Void OnClosed(System::EventArgs^  e) override {
 			 if (this->BUTTON_CONVERT->DialogResult != System::Windows::Forms::DialogResult::OK){
 				 System::Windows::Forms::DialogResult dlgResult = MessageBox::Show(L"You haven't saved changes.\n Would you like to save it?", L"Sound processor", 
 					 MessageBoxButtons::YesNoCancel, MessageBoxIcon::Warning);
 				 if (dlgResult == System::Windows::Forms::DialogResult::Yes){
-					 BUTTON_CONVERT_Click(System::Object^ sender, e);
+					 System::Object^ sender = gcnew System::Object();
+					 BUTTON_CONVERT_Click(sender, e);
 				 }else{
-					 if (dlgResult == System::Windows::Forms::DialogResult::No){
+					 if (dlgResult == System::Windows::Forms::DialogResult::Cancel){
 						 return;
+					 }else{
+						 if (dlgResult == System::Windows::Forms::DialogResult::No){
+							 this->Close();
+						 }
 					 }
 				 }
 			 }
-		} 
+		}*/
 		 void appropriate(SoundBuffer *toBuffer, SoundBuffer *fromBuffer){
 				 if (toBuffer->getLength() != fromBuffer->getLength()){
 					 return;

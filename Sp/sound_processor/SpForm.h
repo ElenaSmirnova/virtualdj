@@ -390,6 +390,7 @@ namespace sound_processor {
 			this->BUTTON_OPEN->UseVisualStyleBackColor = true;
 			this->BUTTON_OPEN->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_OPEN_Click);
 			this->BUTTON_OPEN->TabIndex = 0;
+			this->BUTTON_OPEN->DialogResult = System::Windows::Forms::DialogResult::None;
 			//
 			//BUTTON_CONVERT
 			//
@@ -471,6 +472,7 @@ private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventAr
 				outputString = String::Concat("Open ",fileName);
 			 }
 			 this->LABELSTATE->Text = outputString;
+			 this->BUTTON_OPEN->DialogResult = System::Windows::Forms::DialogResult::Yes;
 		 }
 private: System::Void BUTTON_CONVERT_Click(System::Object^  sender, System::EventArgs^  e) {
 			 appropriate(buffer, exampleBuffer);//вызов функции, отвечающей за конвертирование
@@ -524,14 +526,16 @@ private: System::Void COMPOBOX_EFFECTS_SelectedIndexChanged(System::Object^  sen
 			 }
 		 }
 private: virtual System::Void formOnClosing(System::Object^ sender,CancelEventArgs^  e) override {
-			 if (this->BUTTON_CONVERT->DialogResult != System::Windows::Forms::DialogResult::OK){
-				 System::Windows::Forms::DialogResult dlgResult = MessageBox::Show(L"You haven't saved changes.\n Would you like to save it?", L"Sound processor", 
-					 MessageBoxButtons::YesNoCancel, MessageBoxIcon::Warning);
-				 if (dlgResult == System::Windows::Forms::DialogResult::Yes){
-					 BUTTON_CONVERT_Click(sender, e);
-				 }else{
-					 if (dlgResult == System::Windows::Forms::DialogResult::Cancel){
-						 e->Cancel = true;
+			 if (this->BUTTON_OPEN->DialogResult == System::Windows::Forms::DialogResult::Yes){
+				 if (this->BUTTON_CONVERT->DialogResult != System::Windows::Forms::DialogResult::OK){
+					 System::Windows::Forms::DialogResult dlgResult = MessageBox::Show(L"You haven't saved changes.\n Would you like to save it?", L"Sound processor", 
+						 MessageBoxButtons::YesNoCancel, MessageBoxIcon::Warning);
+					 if (dlgResult == System::Windows::Forms::DialogResult::Yes){
+						 BUTTON_CONVERT_Click(sender, e);
+					 }else{
+						 if (dlgResult == System::Windows::Forms::DialogResult::Cancel){
+							 e->Cancel = true;
+						 }
 					 }
 				 }
 			 }

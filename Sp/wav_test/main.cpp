@@ -11,6 +11,6 @@ void main()
     read2(nullBuffer, "C:\\temp\\newVirtualDj\\sound\\ARROW.wav");
 	write2(nullBuffer, "C:\\temp\\newVirtualDj\\sound\\try.wav");
 
-    printf("Stop\n");
+	printf("Stop\n");
 	getch();
 }

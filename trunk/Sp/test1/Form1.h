@@ -1,6 +1,8 @@
 
 #pragma once
 #include <string>
+//#include "..\wav\structure.h"
+
 
 const int SizeFormH = 6;
 const int SizeFormW = 13;
@@ -17,42 +19,27 @@ namespace test1 {
 
 	int const NumberTabs = 2;
 	int const NumberGraphics = 2;
-	int const arraySise = 5;
-	int _array[arraySise];
-
-	bool IsInitialize = false;
-    /*
-	public ref class hScrollBar1 : public System::Windows::Forms::HScrollBar
-	{
-	public:
-		int OldWidthPos;
-		int NewWidthPos;
-		hScrollBar1(int width, int height)
-		{
-			OldWidthPos = 0;
-			NewWidthPos = 0;
-			Size = System::Drawing::Size(width, 15);
-			Location = System::Drawing::Point(0, height-15);
-		}
-	};*/
-
-
+	int Array[5];
+	
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
     	public:
-			Graphics^ g1;
+			int ArraySize;
 			System::Drawing::Rectangle rect1;
-		Form1(int NumberTabs)
+		Form1(int _array[5], int arraySize)
 		{
+			for (int i = 0; i < arraySize; i++)
+			{
+				Array[i] = _array[i];
+			}
+			ArraySize = arraySize;
           	tabPage = gcnew array<System::Windows::Forms::TabPage^>(NumberTabs);
-            InitializeComponent(NumberTabs, arraySise);
+            InitializeComponent(NumberTabs,arraySize/2);
         }
 
 		void pagePaint(Object^ sender, PaintEventArgs^ e)
 		{
 			Graphics^ g = e->Graphics;  
-			g1=g;
-			_array[0] = 5; _array[1] = 0; _array[2] = -40; _array[3] = 0; _array[4] = 40;
 			int const indent = 30;
 			int k = indent;
 			int w,h;
@@ -63,14 +50,14 @@ namespace test1 {
 			g->FillRectangle(Brushes::White, 0, 0, w, h);
 			
 			// to make a calculation coefficient of stretching and pressing
-			int koefW = w/arraySise;
+			int koefW = w/ArraySize;
 			int koefH;
-			int max = _array[0];
-			for (int i = 1; i < arraySise; i++)
+			int max = Array[0];
+			for (int i = 1; i < ArraySize; i++)
 			{
-				if (_array[i] > max)
+				if (Array[i] > max)
 				{
-					max = _array[i];
+					max = Array[i];
 				}
 			}
 			if (max != 0)
@@ -79,10 +66,10 @@ namespace test1 {
 			}
 
             // draw graphics
-			for (int j = 1; j < arraySise; j++)
+			for (int j = 1; j < ArraySize; j++)
 			{	
-				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle(k,h-indent-(h-indent-10)/2-koefH*_array[j-1],4,4));
-				g->DrawLine(Pens::Black, Point(k,h-indent-(h-indent-10)/2-koefH*_array[j-1]), Point(k+koefW, h-indent-(h-indent-10)/2-koefH*_array[j]));
+				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle(k,h-indent-(h-indent-10)/2-koefH*Array[j-1],4,4));
+				g->DrawLine(Pens::Black, Point(k,h-indent-(h-indent-10)/2-koefH*Array[j-1]), Point(k+koefW, h-indent-(h-indent-10)/2-koefH*Array[j]));
 				k = k+koefW;
 			}
 
@@ -119,7 +106,7 @@ namespace test1 {
 			e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   
 
 			// signature of value
-			for(int i = 1; i < arraySise; i++)
+			for(int i = 1; i < ArraySize; i++)
 			{
 				System::Drawing::Font^ drawFont = gcnew System::Drawing::Font( "Arial",7 );
 				g->DrawLine(Pens::Black, Point(indent+i*koefW,h-(indent-2)-(h-indent-10)/2), Point(indent+i*koefW, h-(indent+2)-(h-indent-10)/2));
@@ -129,11 +116,11 @@ namespace test1 {
 				drawPoint = Point(indent+i*koefW, h-indent-(h-indent-10)/2);
 				e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   
 
-				g->DrawLine(Pens::Black, Point(indent-2, h-_array[i]*koefH), Point(indent+2, h-_array[i]*koefH));
-				itoa(_array[i], &str, 10);
+				g->DrawLine(Pens::Black, Point(indent-2, h-Array[i]*koefH), Point(indent+2, h-Array[i]*koefH));
+				itoa(Array[i], &str, 10);
 				str2 = gcnew String(&str);
 				drawString = str2;
-				drawPoint = Point(indent-20, h-indent-(h-indent-10)/2-koefH*_array[i]);
+				drawPoint = Point(indent-20, h-indent-(h-indent-10)/2-koefH*Array[i]);
 				e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   
 			}
 		}
@@ -152,9 +139,7 @@ namespace test1 {
 
         virtual void OnSizeChanged (EventArgs^ e) override
 		{
-			//this->tabPage[0]->Controls->Remove(hScrollBar);
             Invalidate();
-			//Update();
 			Form::OnSizeChanged(e);
 		}
 
@@ -162,12 +147,6 @@ namespace test1 {
         {
             Invalidate();
 			Form::OnScroll(se);
-		//	PaintEventArgs^ s = (gcnew PaintEventArgs(g1, rect1));
-		//	s->
-		//	s->Graphics=g1;//this->tabControl1->TabPages[0]->CreateGraphics();
-		//	s->ClipRectangle= rect1 ;//this->tabControl1->TabPages[0]->create
-		//	this->OnPaint(s);
-
         }
 
 	protected: 
@@ -191,9 +170,9 @@ namespace test1 {
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
-		void InitializeComponent(int NumberTabs, int arraySise)
+		void InitializeComponent(int NumberTabs, int arraySize)
 		{
-			int i;
+		    int i;
 			this->printDialog1 = (gcnew System::Windows::Forms::PrintDialog());
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 
@@ -217,7 +196,7 @@ namespace test1 {
 			// 
 
 
-			this->tabPage[0]->Paint += gcnew System::Windows::Forms::PaintEventHandler( this, &Form1::pagePaint );
+			this->tabPage[0]->Paint += gcnew System::Windows::Forms::PaintEventHandler( this, &Form1::pagePaint);
 			
 			for(i = 0; i < NumberTabs; i++)
 			{
@@ -281,6 +260,8 @@ private: System::Void textBox2_TextChanged(System::Object^  sender, System::Even
 private: System::Void Form1_Load_3(System::Object^  sender, System::EventArgs^  e) {
 		 }
 private: System::Void Form1_Load_4(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void Form1_Load_5(System::Object^  sender, System::EventArgs^  e) {
 		 }
 };
 }

@@ -100,7 +100,7 @@ namespace test1 {
 			//output height
 			itoa(h, &str, 10);
 			str2 = gcnew String(&str);
-			drawString = " height" + str2;
+			drawString = "height " + str2;
 			
 			drawPoint = Point(w-w/5,15);
 			e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   

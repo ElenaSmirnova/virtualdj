@@ -10,8 +10,8 @@ using namespace test1;
 int main(array<System::String ^> ^args)
 {
 	// Enabling Windows XP visual effects before any controls are created
-	Application::EnableVisualStyles();
-	Application::SetCompatibleTextRenderingDefault(false); 
+	//Application::EnableVisualStyles();
+	//Application::SetCompatibleTextRenderingDefault(false); 
 
 	int _array[5];
 	int arraySize = 5;

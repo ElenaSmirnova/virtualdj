@@ -30,11 +30,13 @@ namespace sound_processor {
 	{
     	public:
 			SoundBuffer *buffer;
+			SoundBuffer *exampleBuffer;
 			
 
-		Form1(SoundBuffer *buffer)
+		Form1(SoundBuffer *buffer, SoundBuffer *exampleBuffer)
 		{
 			this->buffer = buffer;
+			this->exampleBuffer = exampleBuffer;
           	tabPage = gcnew array<System::Windows::Forms::TabPage^>(NumberTabs);
             InitializeComponent(NumberTabs,buffer->getLength());
         }
@@ -43,16 +45,17 @@ namespace sound_processor {
 		{
 			Graphics^ g = e->Graphics;  
 			int const indent = 30;
-			int k = indent;
-			int w,h;
+			double k = indent;
+			double w = 0, h = 0;
 			System::Drawing::Rectangle rect = e->ClipRectangle;
 			w = (rect.Width);
 			h = (rect.Height)/NumberGraphics;
 			g->FillRectangle(Brushes::White, 0, 0, w, h);
 			
 			// to make a calculation coefficient of stretching and pressing
-			int koefW = w/buffer->getLength();
-			int koefH;
+			//double koefW = w/double(buffer->getLength());
+			double koefW = 1;
+			double koefH;
 			int max = buffer->buff[0][0];
 			for (int i = 1; i < buffer->getLength(); i++)
 			{
@@ -63,7 +66,7 @@ namespace sound_processor {
 			}
 			if (max != 0)
 			{
-				koefH = (h-h/20)/(max*2);
+				koefH = (h-h/20)/double(max*2);
 			}
 
             // draw graphics
@@ -101,7 +104,7 @@ namespace sound_processor {
 			//output height
 			itoa(h, &str, 10);
 			str2 = gcnew String(&str);
-			drawString = " height" + str2;
+			drawString = "height " + str2;
 			
 			drawPoint = Point(w-w/5,15);
 			e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   
@@ -233,8 +236,8 @@ namespace sound_processor {
 			this->Controls->Add(this->tabControl1);
             
             
-			this->Name = L"Form1";
-			this->Text = L"Form1";
+			this->Name = L"Sound processor";
+			this->Text = L"Sound processor";
 			this->tabControl1->ResumeLayout(false);
 			this->ResumeLayout(false);
 
@@ -732,7 +735,7 @@ private: System::Void BUTTON_CONVERT_Click(System::Object^  sender, System::Even
 			 this->BUTTON_CONVERT->DialogResult = System::Windows::Forms::DialogResult::OK;
 		 }
 private: System::Void BUTTON_PREVIEW_Click(System::Object^  sender, System::EventArgs^  e) {
-			 this->GRAPHICS = (gcnew Form1(this->global->exampleBuffer));
+			 this->GRAPHICS = (gcnew Form1(this->global->buffer,this->global->exampleBuffer));
 			 GRAPHICS->ShowDialog();
 			 this->LABELSTATE->Text = L"Preview...";
 		 }

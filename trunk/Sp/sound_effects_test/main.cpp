@@ -17,7 +17,7 @@ void printArray(SoundBuffer *buffer){
 
 int main()
 {
-	SoundBuffer *bufferFromUser = new SoundBuffer(NULL,6,60);
+	SoundBuffer *bufferFromUser = new SoundBuffer(NULL,6);
 	
 	bufferFromUser->buff = (int  **)calloc(bufferFromUser->getLength(),sizeof(int  *));
 	for (int i = 0; i < bufferFromUser->getLength(); i ++)
@@ -54,20 +54,13 @@ int main()
 	}
 
 	float coefficient = 0.9;
-	SoundBuffer *memoryBuffer = new SoundBuffer(NULL, bufferFromUser->getLength(),bufferFromUser->frequency);
-	memoryBuffer->buff = (int  **)calloc(memoryBuffer->getLength(),sizeof(int  *));
-	for (int i = 0; i < memoryBuffer->getLength(); i ++)
-	{
-              memoryBuffer->buff[i]=(int *)calloc(2, sizeof(int));
-	}
-
-	if (0 == mainEcho(bufferFromUser, coefficient, true, memoryBuffer)){
+	if (0 == mainEcho(bufferFromUser, coefficient, 2)){
 		cout << "\nfirst echoed buffer\n";
 		printArray(bufferFromUser);
 	}else{
 		cout << "first mainEcho exit with error\n";
 	}
-	if (0 == mainEcho(bufferFromUser, 0, false, memoryBuffer)){
+	if (0 == mainEcho(bufferFromUser, 0, 2)){
 		cout << "\nsecond echoed buffer\n";
 		printArray(bufferFromUser);
 	}else{

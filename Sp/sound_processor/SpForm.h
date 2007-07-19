@@ -1,12 +1,10 @@
 #pragma once
 #include "resource.h"
 
-SoundBuffer *buffer;
-SoundBuffer *exampleBuffer;
-SoundBuffer *exampleMemoryBuffer;
+
 
 namespace sound_processor {
-
+	
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -28,9 +26,9 @@ namespace sound_processor {
 	public ref class SpFormEchoDialog : public System::Windows::Forms::Form
 	{
 	public:
-		SpFormEchoDialog(void)
+		SpFormEchoDialog(Global *global)
 		{
-			InitializeComponent();
+			InitializeComponent(global);
 			//
 			//TODO: Add the constructor code here
 			//
@@ -55,6 +53,7 @@ namespace sound_processor {
 	private: System::Windows::Forms::Label^  LABEL;
 	private: System::Windows::Forms::TextBox^  TEXTBOX;
 	private: System::Windows::Forms::Button^  BUTTON_OK;
+			 Global *global;
 
 	
 	private:
@@ -68,8 +67,9 @@ namespace sound_processor {
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
-		void InitializeComponent(void)
+		void InitializeComponent(Global *global)
 		{
+			this->global = global;
 			this->LABEL = (gcnew System::Windows::Forms::Label());
 			this->TEXTBOX = (gcnew System::Windows::Forms::TextBox());
 			this->BUTTON_OK = (gcnew System::Windows::Forms::Button());
@@ -151,7 +151,7 @@ namespace sound_processor {
 
 					 if ((coefficient < 1)&&(coefficient > 0)) { //корректные данные
 						 bool flagOfFirstUse = true;
-						 mainEcho(exampleBuffer, coefficient, flagOfFirstUse, exampleMemoryBuffer); //вызов процедуры Echo с нужными параметрами
+						 mainEcho(global->exampleBuffer, coefficient, flagOfFirstUse, global->exampleMemoryBuffer); //вызов процедуры Echo с нужными параметрами
 						 this->DialogResult = System::Windows::Forms::DialogResult::OK;
 						 Close();
 					 }else{
@@ -169,9 +169,9 @@ namespace sound_processor {
 	public ref class SpFormDistortionDialog : public System::Windows::Forms::Form
 	{
 	public:
-		SpFormDistortionDialog(void)
+		SpFormDistortionDialog(Global *global)
 		{
-			InitializeComponent();
+			InitializeComponent(global);
 			//
 			//TODO: Add the constructor code here
 			//
@@ -190,6 +190,7 @@ namespace sound_processor {
 		}
 	private: System::Windows::Forms::Label^  LABELHIGHLIMIT;
 	private: System::Windows::Forms::TextBox^  TEXTBOXHIGHLIMIT;
+			 Global *global;
 	protected: 
 
 	protected: 
@@ -215,8 +216,9 @@ namespace sound_processor {
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
-		void InitializeComponent(void)
+		void InitializeComponent(Global *global)
 		{
+			this->global = global;
 			this->LABELHIGHLIMIT = (gcnew System::Windows::Forms::Label());
 			this->TEXTBOXHIGHLIMIT = (gcnew System::Windows::Forms::TextBox());
 			this->LABELLOWLIMIT = (gcnew System::Windows::Forms::Label());
@@ -305,7 +307,7 @@ namespace sound_processor {
 				 }
 
 				 if (lowLimit < highLimit) { //корректные данные
-					 mainDistortion(highLimit, lowLimit, exampleBuffer); //вызов процедуры Distortion с нужными параметрами
+					 mainDistortion(highLimit, lowLimit, global->exampleBuffer); //вызов процедуры Distortion с нужными параметрами
 					 this->DialogResult = System::Windows::Forms::DialogResult::OK;
 					 Close();
 				 }else{
@@ -318,9 +320,9 @@ namespace sound_processor {
 	public ref class SpForm : public System::Windows::Forms::Form
 	{
 	public:
-		SpForm(void)
+		SpForm(Global *global)
 		{
-			InitializeComponent();
+			InitializeComponent(global);
 			//
 			//TODO: Add the constructor code here
 			//
@@ -346,6 +348,7 @@ namespace sound_processor {
 	private: System::Windows::Forms::Label^  LABELSTATE;
 			 SpFormEchoDialog^ ECHODIALOG;
 			 SpFormDistortionDialog^ DISTORTIONDIALOG;
+			 Global *global;
 			 	
 	protected: 
 
@@ -367,9 +370,10 @@ namespace sound_processor {
 		/// the contents of this method with the code editor.
 		/// </summary>
 
-		void InitializeComponent(void)
+		void InitializeComponent(Global *global)
 		{
-			buffer = new SoundBuffer(NULL, 0, 0);
+			this->global = global;
+			//buffer = new SoundBuffer(NULL, 0);
 			this->BUTTON_OPEN = (gcnew System::Windows::Forms::Button());
 			this->BUTTON_CONVERT = (gcnew System::Windows::Forms::Button());
 			this->BUTTON_PREVIEW = (gcnew System::Windows::Forms::Button());
@@ -377,8 +381,8 @@ namespace sound_processor {
 			this->OPENFILEDIALOG = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->SAVEFILEDIALOG = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->LABELSTATE = (gcnew System::Windows::Forms::Label());
-			this->ECHODIALOG = (gcnew SpFormEchoDialog());
-			this->DISTORTIONDIALOG = (gcnew SpFormDistortionDialog());
+			this->ECHODIALOG = (gcnew SpFormEchoDialog(this->global));
+			this->DISTORTIONDIALOG = (gcnew SpFormDistortionDialog(this->global));
 			this->SuspendLayout();
 			//
 			//BUTTON_OPEN
@@ -402,6 +406,7 @@ namespace sound_processor {
 			this->BUTTON_CONVERT->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_CONVERT_Click);
 			this->BUTTON_CONVERT->DialogResult = System::Windows::Forms::DialogResult::None;
 			this->BUTTON_CONVERT->TabIndex = 3;
+			this->BUTTON_CONVERT->Visible = FALSE;
 			//
 			//BUTTON_PREVIEW
 			//
@@ -412,6 +417,7 @@ namespace sound_processor {
 			this->BUTTON_PREVIEW->Text = L"Preview";
 			this->BUTTON_PREVIEW->UseVisualStyleBackColor = true;
 			this->BUTTON_PREVIEW->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_PREVIEW_Click);
+			this->BUTTON_PREVIEW->Visible = FALSE;
 			//
 			//COMPOBOX_EFFECTS
 			//
@@ -422,6 +428,7 @@ namespace sound_processor {
 			this->COMPOBOX_EFFECTS->Size = System::Drawing::Size(121, 21);
 			this->COMPOBOX_EFFECTS->TabIndex = 1;
 			this->COMPOBOX_EFFECTS->SelectedIndexChanged += gcnew System::EventHandler(this, &SpForm::COMPOBOX_EFFECTS_SelectedIndexChanged);
+			this->COMPOBOX_EFFECTS->Visible = FALSE;
 			//
 			//LABELSTATE
 			//
@@ -463,19 +470,22 @@ private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventAr
                     NameOfTheOpenedFile, sizeInBytes,
                     wch, sizeInBytes);
 
-				read2(buffer,NameOfTheOpenedFile);
-				exampleBuffer = new SoundBuffer(NULL, buffer->getLength(), buffer->frequency);
-				appropriate(exampleBuffer, buffer);
-				exampleMemoryBuffer = new SoundBuffer(NULL, buffer->getLength(), buffer->frequency);
+				read2(global->buffer,NameOfTheOpenedFile);
+				global->exampleBuffer = new SoundBuffer(NULL, global->buffer->getLength());
+				appropriate(global->exampleBuffer, global->buffer);
+				global->exampleMemoryBuffer = new SoundBuffer(NULL, global->buffer->getLength());
 
 				fileName = fileName->Remove( 0, fileName->LastIndexOf('\\')+1 );
 				outputString = String::Concat("Open ",fileName);
 			 }
 			 this->LABELSTATE->Text = outputString;
 			 this->BUTTON_OPEN->DialogResult = System::Windows::Forms::DialogResult::Yes;
+			 this->BUTTON_CONVERT->Visible = TRUE;
+			 this->BUTTON_PREVIEW->Visible = TRUE;
+			 this->COMPOBOX_EFFECTS->Visible = TRUE;
 		 }
 private: System::Void BUTTON_CONVERT_Click(System::Object^  sender, System::EventArgs^  e) {
-			 appropriate(buffer, exampleBuffer);//вызов функции, отвечающей за конвертирование
+			 appropriate(global->buffer, global->exampleBuffer);//вызов функции, отвечающей за конвертирование
 			 this->LABELSTATE->Text = L"Convert...";
 			 String^ outputString = "";
 			 if (this->SAVEFILEDIALOG->ShowDialog() == Windows::Forms::DialogResult::OK){ //если нажади Сохранить
@@ -492,7 +502,7 @@ private: System::Void BUTTON_CONVERT_Click(System::Object^  sender, System::Even
                      NameOfTheSavedFile, sizeInBytes,
                      wch, sizeInBytes);
 
-				 write2(buffer, NameOfTheSavedFile);
+				 write2(global->buffer, NameOfTheSavedFile);
 				 outputString = String::Concat("Save as ",fileName);
 			 }
 			 this->LABELSTATE->Text = outputString;
@@ -519,7 +529,7 @@ private: System::Void COMPOBOX_EFFECTS_SelectedIndexChanged(System::Object^  sen
 					}
 				 }else{
 					 if (this->COMPOBOX_EFFECTS->SelectedItem->Equals("Sound effect")){
-						sound_effect(exampleBuffer);
+						 sound_effect(global->exampleBuffer);
 						this->LABELSTATE->Text = L"Sound effect...";
 					 }
 				 }
@@ -549,8 +559,9 @@ private: virtual System::Void formOnClosing(System::Object^ sender,CancelEventAr
 							 toBuffer->buff[i][j] = fromBuffer->buff[i][j];
 						 }
 					 }
+					 toBuffer->titleWave = fromBuffer->titleWave;
 				 }
-			 }
+		 }
 };
 
 

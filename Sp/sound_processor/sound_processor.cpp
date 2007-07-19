@@ -13,7 +13,9 @@ int main(array<System::String ^> ^args)
 	Application::SetCompatibleTextRenderingDefault(false); 
 	//InitCommonControls();
 
+
 	// Create the main window and run it
-	Application::Run(gcnew SpForm());
+	Global *global = new Global();
+	Application::Run(gcnew SpForm(global));
 	return 0;
 }

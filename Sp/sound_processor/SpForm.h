@@ -276,8 +276,11 @@ namespace sound_processor {
 
 
 
-	private: System::Windows::Forms::Label^  LABEL;
-	private: System::Windows::Forms::TextBox^  TEXTBOX;
+	private: System::Windows::Forms::Label^  LABELLOUDNESS;
+			 System::Windows::Forms::Label^  LABELDELAY;
+			 System::Windows::Forms::Label^  LABELHELP;
+	private: System::Windows::Forms::TextBox^  TEXTBOXLOUDNESS;
+			 System::Windows::Forms::TextBox^  TEXTBOXDELAY;
 	private: System::Windows::Forms::Button^  BUTTON_OK;
 			 Global *global;
 
@@ -296,25 +299,50 @@ namespace sound_processor {
 		void InitializeComponent(Global *global)
 		{
 			this->global = global;
-			this->LABEL = (gcnew System::Windows::Forms::Label());
-			this->TEXTBOX = (gcnew System::Windows::Forms::TextBox());
+			this->LABELLOUDNESS = (gcnew System::Windows::Forms::Label());
+			this->TEXTBOXLOUDNESS = (gcnew System::Windows::Forms::TextBox());
+			this->LABELDELAY = (gcnew System::Windows::Forms::Label());
+			this->TEXTBOXDELAY = (gcnew System::Windows::Forms::TextBox());
+			this->LABELHELP = (gcnew System::Windows::Forms::Label());
 			this->BUTTON_OK = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
-			// LABEL
+			// LABELLOUDNESS
 			// 
-			this->LABEL->Location = System::Drawing::Point(13, 63);
-			this->LABEL->Name = L"LABEL";
-			this->LABEL->Size = System::Drawing::Size(122, 17);
-			this->LABEL->TabIndex = 1;
-			this->LABEL->Text = L"Coefficient of the echo";
+			this->LABELLOUDNESS->Location = System::Drawing::Point(13, 35);
+			this->LABELLOUDNESS->Name = L"LABELLOUDNESS";
+			this->LABELLOUDNESS->Size = System::Drawing::Size(122, 17);
+			this->LABELLOUDNESS->Text = L"Coefficient of the echo";
 			// 
-			// TEXTBOX
+			// TEXTBOXLOUDNESS
 			// 
-			this->TEXTBOX->Location = System::Drawing::Point(160, 60);
-			this->TEXTBOX->Name = L"TEXTBOX";
-			this->TEXTBOX->Size = System::Drawing::Size(111, 20);
-			this->TEXTBOX->TabIndex = 2;
+			this->TEXTBOXLOUDNESS->Location = System::Drawing::Point(160, 30);
+			this->TEXTBOXLOUDNESS->Name = L"TEXTBOXLOUDNESS";
+			this->TEXTBOXLOUDNESS->Size = System::Drawing::Size(111, 20);
+			this->TEXTBOXLOUDNESS->TabIndex = 1;
+			// 
+			// LABELDELAY
+			// 
+			this->LABELDELAY->Location = System::Drawing::Point(13, 65);
+			this->LABELDELAY->Name = L"LABELDELAY";
+			this->LABELDELAY->Size = System::Drawing::Size(122, 17);
+			this->LABELDELAY->Text = L"Delay";
+			// 
+			// TEXTBOXDELAY
+			// 
+			this->TEXTBOXDELAY->Location = System::Drawing::Point(160, 60);
+			this->TEXTBOXDELAY->Name = L"TEXTBOXDELAY";
+			this->TEXTBOXDELAY->Size = System::Drawing::Size(111, 20);
+			this->TEXTBOXDELAY->TabIndex = 2;
+			// 
+			// LABELHELP
+			// 
+			this->LABELHELP->Location = System::Drawing::Point(13, 83);
+			this->LABELHELP->Name = L"LABELHELP";
+			this->LABELHELP->Size = System::Drawing::Size(300, 17);
+			if (global->exampleBuffer != NULL){
+				this->LABELHELP->Text = L"(It would be better, if it is equals "+global->exampleBuffer->titleWave.freq/2+L", maximum="+global->exampleBuffer->getLength()+L")";
+			}
 			// 
 			// BUTTON_OK
 			// 
@@ -333,8 +361,11 @@ namespace sound_processor {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(292, 159);
 			this->Controls->Add(this->BUTTON_OK);
-			this->Controls->Add(this->TEXTBOX);
-			this->Controls->Add(this->LABEL);
+			this->Controls->Add(this->LABELLOUDNESS);
+			this->Controls->Add(this->TEXTBOXLOUDNESS);
+			this->Controls->Add(this->LABELDELAY);
+			this->Controls->Add(this->TEXTBOXDELAY);
+			this->Controls->Add(this->LABELHELP);
 			this->MaximizeBox = false;
 			this->Name = L"SpFormEchoDialog";
 			this->Text = L"Echo parameters";
@@ -345,8 +376,8 @@ namespace sound_processor {
 #pragma endregion
 	private: System::Void BUTTON_OK_Click(System::Object^  sender, System::EventArgs^  e) {
 				 this->DialogResult = System::Windows::Forms::DialogResult::None;
-				 String^ text = this->TEXTBOX->Text;
-
+				 
+				 String^ text = this->TEXTBOXLOUDNESS->Text;
 				 //перевод System::String в char*
 				 pin_ptr<const wchar_t> wch = PtrToStringChars(text);
 				 size_t convertedChars = 0;
@@ -357,12 +388,32 @@ namespace sound_processor {
 					coefficientInChar, sizeInBytes,
 					wch, sizeInBytes);
 
+				 long delay = 0;
+				 String^ textDelay = this->TEXTBOXDELAY->Text;
+				 //перевод System::String в char*
+				 wch = PtrToStringChars(textDelay);
+				 convertedChars = 0;
+				 err = 0;
+				 sizeInBytes = ((textDelay->Length + 1) * 2);
+				 char* delayInChar = (char *)malloc(sizeInBytes);
+				 err = wcstombs_s(&convertedChars, 
+					delayInChar, sizeInBytes,
+					wch, sizeInBytes);
+				 if (delayInChar != NULL){
+					 //перевод из char* в long
+					 int length = 0;
+					 while (delayInChar[length] != '\0') {length++;}
+					 for (int i=0; i<length; i++){
+						 delay = delay*10 + (delayInChar[i]-48);
+					 }
+				 }
+
 				 if (coefficientInChar != NULL) {
 					 //перевод из char* в float
 					 int intCoefficient = 0;
 					 int placeOfPoint = 0;
 					 int length = 0;
-					 while (coefficientInChar[length] != '\0') length++;
+					 while (coefficientInChar[length] != '\0') {length++;}
 					 for (int i=0; i<length; i++){
 						 if (coefficientInChar[i] != '.'){
 							intCoefficient = intCoefficient*10 + (coefficientInChar[i]-48);
@@ -375,15 +426,21 @@ namespace sound_processor {
 						 coefficient = coefficient/10;
 					 }
 
-					 if ((coefficient < 1)&&(coefficient > 0)) { //корректные данные
-						 bool flagOfFirstUse = true;
-						 mainEcho(global->exampleBuffer, coefficient, flagOfFirstUse, global->exampleMemoryBuffer); //вызов процедуры Echo с нужными параметрами
-						 this->DialogResult = System::Windows::Forms::DialogResult::OK;
-						 Close();
+					 if ((coefficient < 1)&&(coefficient > 0)) {
+						 if ((delay > 0)&&(delay < global->exampleBuffer->getLength())){//корректные данные
+							bool flagOfFirstUse = true;
+							mainEcho(global->exampleBuffer, coefficient, delay); //вызов процедуры Echo с нужными параметрами
+							this->DialogResult = System::Windows::Forms::DialogResult::OK;
+							Close();
+						 }else{
+							 MessageBox::Show(L"Delay must be positive and lesser then the length of the native buffer", L"Sound processor", 
+								MessageBoxButtons::OK, MessageBoxIcon::Error);
+							 this->TEXTBOXDELAY->Text = L"";
+						 }
 					 }else{
 						 MessageBox::Show(L"The coefficient must be between 0 and 1", L"Sound processor", 
 							 MessageBoxButtons::OK, MessageBoxIcon::Error);
-						 this->TEXTBOX->Text = L"";
+						 this->TEXTBOXLOUDNESS->Text = L"";
 					 }
 				 }
 			 }
@@ -427,6 +484,7 @@ namespace sound_processor {
 
 
 	private: System::Windows::Forms::Label^  LABELLOWLIMIT;
+			 System::Windows::Forms::Label^  LABELHELP;
 	private: System::Windows::Forms::TextBox^  TEXTBOXLOWLIMIT;
 	private: System::Windows::Forms::Button^  BUTTON_OK;
 
@@ -449,26 +507,48 @@ namespace sound_processor {
 			this->TEXTBOXHIGHLIMIT = (gcnew System::Windows::Forms::TextBox());
 			this->LABELLOWLIMIT = (gcnew System::Windows::Forms::Label());
 			this->TEXTBOXLOWLIMIT = (gcnew System::Windows::Forms::TextBox());
+			this->LABELHELP = (gcnew System::Windows::Forms::Label());
 			this->BUTTON_OK = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
-			this->LABELHIGHLIMIT->Location = System::Drawing::Point(34, 29);
+
+			this->LABELHIGHLIMIT->Location = System::Drawing::Point(34, 25);
 			this->LABELHIGHLIMIT->Name = L"LABELHIGHLIMIT";
 			this->LABELHIGHLIMIT->Size = System::Drawing::Size(93, 17);
-			this->LABELHIGHLIMIT->TabIndex = 1;
 			this->LABELHIGHLIMIT->Text = L"High limit";
-			this->TEXTBOXHIGHLIMIT->Location = System::Drawing::Point(149, 26);
+
+			this->TEXTBOXHIGHLIMIT->Location = System::Drawing::Point(149, 20);
 			this->TEXTBOXHIGHLIMIT->Name = L"TEXTBOXHIGHLIMIT";
 			this->TEXTBOXHIGHLIMIT->Size = System::Drawing::Size(111, 20);
 			this->TEXTBOXHIGHLIMIT->TabIndex = 2;
-			this->LABELLOWLIMIT->Location = System::Drawing::Point(34, 68);
+
+			this->LABELLOWLIMIT->Location = System::Drawing::Point(34, 55);
 			this->LABELLOWLIMIT->Name = L"LABELLOWLIMIT";
 			this->LABELLOWLIMIT->Size = System::Drawing::Size(93, 16);
-			this->LABELLOWLIMIT->TabIndex = 4;
 			this->LABELLOWLIMIT->Text = L"Low limit";
-			this->TEXTBOXLOWLIMIT->Location = System::Drawing::Point(149, 68);
+
+			this->TEXTBOXLOWLIMIT->Location = System::Drawing::Point(149, 50);
 			this->TEXTBOXLOWLIMIT->Name = L"TEXTBOXLOWLIMIT";
 			this->TEXTBOXLOWLIMIT->Size = System::Drawing::Size(111, 20);
 			this->TEXTBOXLOWLIMIT->TabIndex = 5;
+
+			this->LABELHELP->Location = System::Drawing::Point(34, 85);
+			this->LABELHELP->Name = L"LABELHELP";
+			this->LABELHELP->Size = System::Drawing::Size(300, 17);
+			if (global->exampleBuffer != NULL){
+				int max = 0, min = 0;
+				for (int i=0; i<global->exampleBuffer->getLength(); i++){
+					for (int j=0; j<2; j++){
+						if (max < global->exampleBuffer->buff[i][j]){
+							max = global->exampleBuffer->buff[i][j];
+						}
+						if (min > global->exampleBuffer->buff[i][j]){
+							min = global->exampleBuffer->buff[i][j];
+						}
+					}
+				}
+				this->LABELHELP->Text = L"(maximum="+max+L", minimum="+min+L")";
+			}
+
 			this->BUTTON_OK->Location = System::Drawing::Point(184, 108);
 			this->BUTTON_OK->Name = L"BUTTON_OK";
 			this->BUTTON_OK->Size = System::Drawing::Size(75, 23);
@@ -476,6 +556,7 @@ namespace sound_processor {
 			this->BUTTON_OK->Text = L"OK";
 			this->BUTTON_OK->UseVisualStyleBackColor = true;
 			this->BUTTON_OK->Click += gcnew System::EventHandler(this, &SpFormDistortionDialog::BUTTON_OK_Click);
+
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(292, 159);
@@ -484,6 +565,7 @@ namespace sound_processor {
 			this->Controls->Add(this->LABELLOWLIMIT);
 			this->Controls->Add(this->TEXTBOXHIGHLIMIT);
 			this->Controls->Add(this->LABELHIGHLIMIT);
+			this->Controls->Add(this->LABELHELP);
 			this->MaximizeBox = false;
 			this->Name = L"SpForm";
 			this->Text = L"Distortion parameters";
@@ -607,8 +689,6 @@ namespace sound_processor {
 			this->OPENFILEDIALOG = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->SAVEFILEDIALOG = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->LABELSTATE = (gcnew System::Windows::Forms::Label());
-			this->ECHODIALOG = (gcnew SpFormEchoDialog(this->global));
-			this->DISTORTIONDIALOG = (gcnew SpFormDistortionDialog(this->global));
 			this->SuspendLayout();
 			//
 			//BUTTON_OPEN
@@ -616,7 +696,7 @@ namespace sound_processor {
 			this->BUTTON_OPEN->Location = System::Drawing::Point(12, 26);
 			this->BUTTON_OPEN->Name = L"BUTTON_OPEN";
 			this->BUTTON_OPEN->Size = System::Drawing::Size(75, 23);
-			this->BUTTON_OPEN->Text = L"Open";
+			this->BUTTON_OPEN->Text = L"Open file";
 			this->BUTTON_OPEN->UseVisualStyleBackColor = true;
 			this->BUTTON_OPEN->Click += gcnew System::EventHandler(this, &SpForm::BUTTON_OPEN_Click);
 			this->BUTTON_OPEN->TabIndex = 0;
@@ -648,7 +728,7 @@ namespace sound_processor {
 			//COMPOBOX_EFFECTS
 			//
 			this->COMPOBOX_EFFECTS->FormattingEnabled = true;
-			this->COMPOBOX_EFFECTS->Items->AddRange(gcnew cli::array< System::Object^  >(3) {L"Echo", L"Distortion", L"Sound effect"});
+			this->COMPOBOX_EFFECTS->Items->AddRange(gcnew cli::array< System::Object^  >(2) {L"Echo", L"Distortion"});
 			this->COMPOBOX_EFFECTS->Location = System::Drawing::Point(12, 95);
 			this->COMPOBOX_EFFECTS->Name = L"COMPOBOX_EFFECTS";
 			this->COMPOBOX_EFFECTS->Size = System::Drawing::Size(121, 21);
@@ -681,7 +761,7 @@ namespace sound_processor {
 		}
 #pragma endregion
 private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventArgs^  e) {
-			 this->LABELSTATE->Text = L"";
+			 this->LABELSTATE->Text = L"Opening...";
 			 String^ outputString ="";
 			 if (this->OPENFILEDIALOG->ShowDialog() == Windows::Forms::DialogResult::OK){ //если нажали Открыть
 				String^ fileName = this->OPENFILEDIALOG->FileName; //получение имени файла, который надо открыть
@@ -696,13 +776,15 @@ private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventAr
                     NameOfTheOpenedFile, sizeInBytes,
                     wch, sizeInBytes);
 
-				read2(global->buffer,NameOfTheOpenedFile);
+				read2(global->buffer, NameOfTheOpenedFile);
 				global->exampleBuffer = new SoundBuffer(NULL, global->buffer->getLength());
 				appropriate(global->exampleBuffer, global->buffer);
 				global->exampleMemoryBuffer = new SoundBuffer(NULL, global->buffer->getLength());
+				this->ECHODIALOG = (gcnew SpFormEchoDialog(this->global));
+				this->DISTORTIONDIALOG = (gcnew SpFormDistortionDialog(this->global));
 
 				fileName = fileName->Remove( 0, fileName->LastIndexOf('\\')+1 );
-				outputString = String::Concat("Open ",fileName);
+				outputString = String::Concat("Opened ",fileName);
 			 }
 			 this->LABELSTATE->Text = outputString;
 			 this->BUTTON_OPEN->DialogResult = System::Windows::Forms::DialogResult::Yes;
@@ -754,15 +836,10 @@ private: System::Void COMPOBOX_EFFECTS_SelectedIndexChanged(System::Object^  sen
 					if (dlgResult == System::Windows::Forms::DialogResult::OK) {
 						this->LABELSTATE->Text = L"Echo...";
 					}
-				 }else{
-					 if (this->COMPOBOX_EFFECTS->SelectedItem->Equals("Sound effect")){
-						 sound_effect(global->exampleBuffer);
-						this->LABELSTATE->Text = L"Sound effect...";
-					 }
 				 }
 			 }
 		 }
-private: virtual System::Void formOnClosing(System::Object^ sender,CancelEventArgs^  e) override {
+private: System::Void formOnClosing(System::Object^ sender,CancelEventArgs^  e) {
 			 if (this->BUTTON_OPEN->DialogResult == System::Windows::Forms::DialogResult::Yes){
 				 if (this->BUTTON_CONVERT->DialogResult != System::Windows::Forms::DialogResult::OK){
 					 System::Windows::Forms::DialogResult dlgResult = MessageBox::Show(L"You haven't saved changes.\n Would you like to save it?", L"Sound processor", 

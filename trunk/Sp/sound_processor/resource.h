@@ -7,6 +7,19 @@
 #include <vcclr.h>
 #include "..\wav\structure.h"
 
+public class Global{
+	public:
+		SoundBuffer *buffer;
+		SoundBuffer *exampleBuffer;
+		SoundBuffer *exampleMemoryBuffer;
+
+		Global(){
+			buffer = new SoundBuffer(NULL, 0);
+			exampleBuffer = NULL;
+			exampleMemoryBuffer = NULL;
+		}
+	};
+
 #define CANALS 2
 /*[DllImport("wav.dll")]
 [DllImport("sound_effects.dll")]*/

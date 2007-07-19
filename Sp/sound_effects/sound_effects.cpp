@@ -181,13 +181,13 @@ void setMemory(SoundBuffer *buffer, bool flagOfFirstUse, SoundBuffer *memoryBuff
 		}
 	}
 	
-	SoundBuffer *tempMemoryBuffer = new SoundBuffer(NULL, buffer->getLength(), buffer->frequency);
+	SoundBuffer *tempMemoryBuffer = new SoundBuffer(NULL, buffer->getLength());
 	
 	appropriate(tempMemoryBuffer,buffer,buffer->getLength());
 	if (!flagOfFirstUse) {
 		sumBuffers(buffer,memoryBuffer);
 	}else{
-		sumBuffers(buffer, new SoundBuffer(NULL, buffer->getLength(), buffer->frequency));
+		sumBuffers(buffer, new SoundBuffer(NULL, buffer->getLength()));
 	}
 	
 	for (int i=0; i<CANALS; i++){
@@ -200,14 +200,14 @@ extern "C" __declspec(dllexport) int mainEcho(SoundBuffer *buffer, float coeffic
 		cout << "\nSorry, but coefficient must be in [0,1]\n";
 		return 1;
 	}
-	if (buffer->frequency <= 0) {
+	if (buffer->titleWave.freq <= 0) {
 		cout << "Sorry, error with the digitization\n";
 		return 1;
 	}
 
 	coeff = coefficient;
 	if (buffer != NULL){
-		DELAY = floor((buffer->frequency/20)+0.5);
+		DELAY = floor((buffer->titleWave.freq/20)+0.5);
 		setMemory(buffer, flagOfFirstUse, memoryBuffer);
 	}else{ 
 		cout << "The buffer is empty\n";
@@ -220,7 +220,6 @@ extern "C" __declspec(dllexport) void sound_effect(SoundBuffer *buffer)
 {
 	if (buffer->buff != NULL) {
 	}else{
-		return 1;
 	}
 }
 

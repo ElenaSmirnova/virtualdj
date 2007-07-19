@@ -19,29 +19,25 @@ typedef struct {
 	char id_data[4];//- идентификатор ="data" =0x61746164
 	long len_data;//  - длина выборки
 
-	byte sample[1000768];//- массив из амплитуд;
 } TitleWave;
 
 struct SoundBuffer {
 public:
-	int **buff;// - указатель
-	long frequency;// частота выборки
 	TitleWave titleWave;
+	int **buff;// - указатель
 private:
 	long len_buff;// - длина динамического массива
 public:
 	void setLength(long len_buff){
 		this->len_buff = len_buff;
 		buff = (int **)calloc(this->len_buff,sizeof(int *));
-		for (int i=0; i < this->len_buff; i++)
-		{
-				  buff[i]=(int *)calloc(2, sizeof(int));
+		for (int i=0; i < this->len_buff; i++){
+			buff[i]=(int *)calloc(2, sizeof(int));
 		}
 	}
-	SoundBuffer(int **buffer, long len_buff, long frequency){
+	SoundBuffer(int **buffer, long len_buff){
 		buff = buffer;
 		setLength(len_buff);
-		this->frequency = frequency;
 	}
 	~SoundBuffer(){
 		for (int i=0; i<len_buff; i++){

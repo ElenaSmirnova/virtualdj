@@ -25,6 +25,7 @@ struct SoundBuffer {
 public:
 	TitleWave titleWave;
 	int **buff;// - указатель
+	long lastSimbol;
 private:
 	long len_buff;// - длина динамического массива
 public:
@@ -38,6 +39,7 @@ public:
 	SoundBuffer(int **buffer, long len_buff){
 		buff = buffer;
 		setLength(len_buff);
+		lastSimbol = 0;
 	}
 	~SoundBuffer(){
 		for (int i=0; i<len_buff; i++){

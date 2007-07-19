@@ -8,9 +8,8 @@ void main()
     //TODO:
     //вызов функции из динамической библиотеки wav
 	SoundBuffer *nullBuffer = new SoundBuffer(NULL, 0);
-    read2(nullBuffer, "C:\\temp\\newVirtualDj\\sound\\ARROW.wav");
-	write2(nullBuffer, "C:\\temp\\newVirtualDj\\sound\\try.wav");
+    read2(nullBuffer, "C:\\Documents and Settings\\Belka\\Рабочий стол\\virtualDj\\Sp\\sound\\ARROW.wav");
+	write2(nullBuffer, "C:\\Documents and Settings\\Belka\\Рабочий стол\\virtualDj\\Sp\\sound\\try.wav");
 
 	printf("Stop\n");
-	getch();
 }

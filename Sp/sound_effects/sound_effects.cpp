@@ -107,64 +107,33 @@ void echo(int** toBuffer,int** fromBuffer, int length){
 	}
 }
 
-int sumBuffers(SoundBuffer *buffer,SoundBuffer *memoryBuffer){
-	//int* firstEcho= new int[buffer->len_buff];//массив для первого эха
+int sumBuffers(SoundBuffer *buffer){
+	//массив для первого эха
 	int** firstEcho = (int  **)calloc(buffer->getLength(),sizeof(int  *));
 	for (int i = 0; i < buffer->getLength(); i ++)
 	{
               firstEcho[i]=(int *)calloc(2, sizeof(int));
 	}
 
-	//int* secondEcho = new int[buffer->len_buff];//массив для второго эха
+	//массив для второго эха
 	int** secondEcho = (int  **)calloc(buffer->getLength(),sizeof(int  *));
 	for (int i = 0; i < buffer->getLength(); i ++)
 	{
               secondEcho[i]=(int *)calloc(2, sizeof(int));
 	}
 
-	//массив для остатка от первого эха
-	int** firstMemoryBuffer = (int  **)calloc(DELAY,sizeof(int *));
-	for (int i = 0; i < DELAY; i++){
-              firstMemoryBuffer[i]=(int *)calloc(2, sizeof(int));
-	}
-	//массив для остатка от второго эха
-	int** secondMemoryBuffer = (int  **)calloc(2*DELAY,sizeof(int  *));
-	for (int i = 0; i < 2*DELAY; i ++){
-              secondMemoryBuffer[i]=(int *)calloc(2, sizeof(int));
-	}
-
-	for (int j=0; j<CANALS; j++){
-		if (memoryBuffer->buff != NULL) {//если уже не первый буффер со звуком
-			for (int i=0; i<2*DELAY; i++){
-				secondMemoryBuffer[i][j] = memoryBuffer->buff[buffer->getLength() - 2*DELAY + i][j];
-			}
-			for (int i=0; i<DELAY; i++){
-				firstMemoryBuffer[i][j] = (int)memoryBuffer->buff[buffer->getLength() - DELAY +i][j];
-			}
-		}else{//если начало песни, то есть обрабатываем первый буффер со свуком
-			for (int i=0; i<2*DELAY; i++){
-				secondMemoryBuffer[i][j] = 0;
-			}
-			for (int i=0; i<DELAY; i++){
-				firstMemoryBuffer[i][j] = 0;
-			}
-		}
-	}
-
 	if (NULL != buffer->buff){
 		echo(firstEcho, buffer->buff, buffer->getLength());//получили первое эхо
 		echo(secondEcho,firstEcho, buffer->getLength());//получили второе эхо
 		
-		echo((int**)firstMemoryBuffer, (int**)firstMemoryBuffer,DELAY);//получили первое эхо остатка
-		echo((int**)secondMemoryBuffer, (int**)secondMemoryBuffer, 2*DELAY);
-		echo((int**)secondMemoryBuffer, (int**)secondMemoryBuffer, 2*DELAY);//получили второе эхо остатка
-		
 		for (int j=0; j<buffer->getLength(); j++){
 			for (int i=0; i<CANALS; i++){
-				if (j<DELAY) {buffer->buff[j][i] = buffer->buff[j][i] + firstMemoryBuffer[j][i];}
-				if (j<2*DELAY) {buffer->buff[j][i] = buffer->buff[j][i] + secondMemoryBuffer[j][i];}
-				if (j>=DELAY) {buffer->buff[j][i] = buffer->buff[j][i] + firstEcho[j-DELAY][i];}
-				if (j>=2*DELAY) {buffer->buff[j][i] = buffer->buff[j][i] + secondEcho[j-2*DELAY][i];}
+				if (j>=DELAY) {
+					buffer->buff[j][i] = buffer->buff[j][i] + firstEcho[j-DELAY][i];
+				}
+				if (j>=2*DELAY) {
+					buffer->buff[j][i] = buffer->buff[j][i] + secondEcho[j-2*DELAY][i];
+				}
 			}
 		}//создаем выходной буффер
 		
@@ -172,30 +141,7 @@ int sumBuffers(SoundBuffer *buffer,SoundBuffer *memoryBuffer){
 	return 0;
 }
 
-void setMemory(SoundBuffer *buffer, bool flagOfFirstUse, SoundBuffer *memoryBuffer){
-	if (flagOfFirstUse){
-		for (int i=0; i<CANALS; i++){
-			for (int j=0; j<memoryBuffer->getLength(); j++){
-				memoryBuffer->buff[i][j] = NULL;
-			}
-		}
-	}
-	
-	SoundBuffer *tempMemoryBuffer = new SoundBuffer(NULL, buffer->getLength());
-	
-	appropriate(tempMemoryBuffer,buffer,buffer->getLength());
-	if (!flagOfFirstUse) {
-		sumBuffers(buffer,memoryBuffer);
-	}else{
-		sumBuffers(buffer, new SoundBuffer(NULL, buffer->getLength()));
-	}
-	
-	for (int i=0; i<CANALS; i++){
-		appropriate(memoryBuffer,tempMemoryBuffer,buffer->getLength());
-	}
-}
-
-extern "C" __declspec(dllexport) int mainEcho(SoundBuffer *buffer, float coefficient, bool flagOfFirstUse, SoundBuffer *memoryBuffer){
+extern "C" __declspec(dllexport) int mainEcho(SoundBuffer *buffer, float coefficient, long delay){
 	if ((coefficient <= 0) || (coefficient >1)){
 		cout << "\nSorry, but coefficient must be in [0,1]\n";
 		return 1;
@@ -204,23 +150,21 @@ extern "C" __declspec(dllexport) int mainEcho(SoundBuffer *buffer, float coeffic
 		cout << "Sorry, error with the digitization\n";
 		return 1;
 	}
+	if ((delay <= 0)||(delay >= buffer->getLength())){
+		cout << "Sorry, delay must be positive and not to be bigger then the real buffer\n";
+		return 1;
+	}
 
 	coeff = coefficient;
 	if (buffer != NULL){
-		DELAY = floor((buffer->titleWave.freq/20)+0.5);
-		setMemory(buffer, flagOfFirstUse, memoryBuffer);
+		DELAY = delay;
+		sumBuffers(buffer);
 	}else{ 
 		cout << "The buffer is empty\n";
 		return 1; 
 	}
 
 	return 0;
-}
-extern "C" __declspec(dllexport) void sound_effect(SoundBuffer *buffer)
-{
-	if (buffer->buff != NULL) {
-	}else{
-	}
 }
 
 #ifdef _MANAGED

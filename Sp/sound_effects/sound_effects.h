@@ -10,6 +10,5 @@
 //TODO:
 typedef  void eff_parameters;
 
-extern "C" __declspec(dllexport) void sound_effect(SoundBuffer *buffer);
-extern "C" __declspec(dllexport) int mainEcho(SoundBuffer *buffer, float coefficient, bool flagOfFirstUse, SoundBuffer *memoryBuffer);
+extern "C" __declspec(dllexport) int mainEcho(SoundBuffer *buffer, float coefficient, long delay);
 extern "C" __declspec(dllexport) int mainDistortion(int highLimit, int lowLimit, SoundBuffer *buffer);

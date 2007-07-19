@@ -1,6 +1,9 @@
 // This is the main DLL file.
 
 #include "wav.h"
+#include <iostream>
+using namespace std;
+
 #ifdef _MANAGED
 #pragma managed(push, off)
 #endif
@@ -11,34 +14,27 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpRese
 }
 
 //TODO:
-void appropriate1(int **toArray, const byte *fromArray,long int columns,int channell)
+void appropriate(int **toArray, const int *fromArray,long int columns,int channell)
 {
-	int i1;
-	i1 = 0;
-	if (channell == 2)
-	{
-		
-		for (long int j = 0; j < columns; j ++)
-		{
+	int i1 = 0;
+	if (channell == 2){
+		for (long int j = 0; j < columns; j ++){
 			toArray[i1][0] = fromArray[j];
 			j = j + 1;
 			toArray[i1][1] = fromArray[j];
 			i1 = i1 + 1;
 		}
-	}
-	else 
-	{
-		for (long int j = 0; j < columns; j ++)
-		{
+	}else{
+		for (long int j = 0; j < columns; j ++){
 			toArray[j][0] = (int)fromArray[j];
 			toArray[j][1] = NULL;
 		}
 	}
 }//разделяет одномерный массив на две строчки двумерного массива (8 bits)
-void appropriate2(int **toArray, short int *fromArray, long int columns,int channell)
+
+/*void appropriate2(int **toArray, short int *fromArray, long int columns,int channell)
 {
-	int i1;
-	i1 = 0;
+	int i1 = 0;
 	if (channell == 2)
 	{
 		
@@ -59,20 +55,41 @@ void appropriate2(int **toArray, short int *fromArray, long int columns,int chan
 		}
 	} 
 }//разделяет одномерный массив на две строчки двумерного массива (16 bits)
+*/
+
 extern "C" __declspec(dllexport) void read2(SoundBuffer *buffer, char* name)
 {
-	int i = 0;
+	cout << "read\n";
 	FILE * f;
 	TitleWave tw;
 	
-	f=fopen(name,"r");
-	if ( f == 0 ) 
-	{ 
+	f=fopen(name,"rb");
+	if ( f == 0 ){ 
 		printf("Cannot open file - %s\n", name); 
 		return; 
 	}
 	fread(&tw,sizeof(TitleWave),1,f);
-	fclose(f);
+
+	long i=0;
+	int *sample = new int[1000000];
+	memset(sample, 0, 1000000*sizeof(int));
+	while (!feof(f)){
+		if (tw.bits == 8){
+			fread(&sample[i], 1, 1, f);
+			cout << i << "   " << sample[i] << "\n";
+		}else{
+			if(tw.bits == 16){
+				fread(&sample[i], 2, 1, f);
+			}else{
+				return;
+			}
+		}
+		i++;
+	}
+	
+	buffer->setLength(i-1);
+	appropriate(buffer->buff, sample, buffer->getLength(), tw.channels);
+
 	printf("LEN RIFF\t - %ld\n", tw.len_riff );
 	if ( strncmp(tw.id_riff,"RIFF",4)!=0 )
 		printf("problem - identificator RIFF\n");
@@ -92,60 +109,52 @@ extern "C" __declspec(dllexport) void read2(SoundBuffer *buffer, char* name)
 	if ( strncmp(tw.id_data,"data",4)!=0 )
 		printf("problem - identificator DATA\n");
 
-	if ((tw.bits == 16) && ( tw.channels == 2)){
-		buffer->setLength(tw.len_data/4);
-	}else{
-		buffer->setLength(tw.len_data);
-	}
-
-	buffer->frequency = tw.freq;
-	byte *samp8 = tw.sample;
-	short int *samp16 = (short int *)tw.sample;
-
-	i = 0;
-	if (tw.bits == 8)
-	{
-		appropriate1(buffer->buff, samp8, tw.len_data, tw.channels);
-		while (i < tw.len_data)
-		{
-			printf("sampleChannel1\t - %d\n", buffer->buff[i][0]);
-			if (tw.channels == 2)
-			{
-				printf("sampleChannel2\t - %d\n", buffer->buff[i][1]);
-			}
-			i = i+1;
-		}
-	}
-	else
-	{
-		appropriate2(buffer->buff, samp16, tw.len_data/2, tw.channels);
-		while (i < tw.len_data/4)
-		{
-			printf("sampleChannel1\t - %d\n", buffer->buff[i][0]);
-			if (tw.channels == 2)
-			{
-				printf("sampleChannel2\t - %d\n", buffer->buff[i][1]);
-			}
-			i = i+1;
-		}
-	}
-
 	buffer->titleWave = tw;
 
 	printf("len\t - %d\n", buffer->getLength());
-	printf("fr\t - %d\n", buffer->frequency);
+	printf("fr\t - %d\n", buffer->titleWave.freq);
+
+	fclose(f);
 }
 
 //TODO:
 extern "C" __declspec(dllexport) void write2(SoundBuffer *buffer, char* name)
 {
-	FILE *f1;
-	TitleWave tw;
+	cout << "write\n";
+	FILE *f;
 	
-	f1 = fopen(name,"w+"); //create new file if it doesn't exist, else overwrite the file
-	fwrite(&(buffer->titleWave),46, 1, f1); 
-	fwrite(buffer->buff, buffer->getLength(), 1, f1);
-	fclose(f1);
+	fopen_s(&f,name,"wb+"); //create new file if it doesn't exist, else overwrite the file
+	fwrite(&(buffer->titleWave), sizeof(TitleWave), 1, f);
+
+	if (buffer->titleWave.bits == 8){
+		if (buffer->titleWave.channels == 2){
+			for (long int j = 0; j < buffer->getLength(); j++){
+				byte b = buffer->buff[j][0];
+				fwrite(&b, 1, 1, f);
+				fwrite(&buffer->buff[j][1], 1, 1, f);
+			}
+		}else{
+			for (long int j = 0; j < buffer->getLength(); j ++){
+				byte b = buffer->buff[j][0];
+				fwrite(&b, 1, 1, f);
+			}
+		}
+	}else{
+		if (buffer->titleWave.bits == 16){
+			if (buffer->titleWave.channels == 2){
+				for (long int j = 0; j < buffer->getLength(); j ++){
+					fwrite(&buffer->buff[j][0], 2, 1, f);
+					fwrite(&buffer->buff[j][1], 2, 1, f);
+				}
+			}else{
+				for (long int j = 0; j < buffer->getLength(); j ++){
+					fwrite(&buffer->buff[j][0], 2, 1, f);
+				}
+			} 
+		}
+	}
+
+	fclose(f);
 }
 
 #ifdef _MANAGED

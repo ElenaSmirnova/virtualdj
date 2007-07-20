@@ -53,7 +53,8 @@ namespace sound_processor {
 			g->FillRectangle(Brushes::White, 0, 0, w, h);
 			
 			// to make a calculation coefficient of stretching and pressing
-			//double koefW = w/double(buffer->getLength());
+	
+			double time = (buffer->getLength())/double(buffer->titleWave.freq);
 			double koefW = 1;
 			double koefH;
 			int max = buffer->buff[0][0];
@@ -66,22 +67,31 @@ namespace sound_processor {
 			}
 			if (max != 0)
 			{
-				koefH = (h-h/20)/double(max*2);
+				koefH = double(h-indent-10)/(2*max);
 			}
 
             // draw graphics
 			for (int j = 1; j < buffer->getLength(); j++)
 			{	
-				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle(k,h-indent-(h-indent-10)/2-koefH*buffer->buff[j-1][0],4,4));
-				g->DrawLine(Pens::Black, Point(k,h-indent-(h-indent-10)/2-koefH*buffer->buff[j-1][0]), Point(k+koefW, h-indent-(h-indent-10)/2-koefH*buffer->buff[j][0]));
+				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle(k,h-indent-(h-indent-10)/2-koefH*buffer->buff[j-1][0],1,1));
+				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle(k,h-indent-(h-indent-10)/2+koefH*buffer->buff[j-1][0],1,1));
+				g->DrawLine(Pens::Black, Point(k,h-indent-(h-indent-10)/2-koefH*buffer->buff[j-1][0]), Point(k, h-indent-(h-indent-10)/2+koefH*buffer->buff[j-1][0]));
 				k = k+koefW;
 			}
-
+			// draw modified graphics
+			k = indent;
+			for (int j = 1; j < exampleBuffer->getLength(); j++)
+			{	
+				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle(k,h+10+(h-indent-10)/2-koefH*exampleBuffer->buff[j-1][0],1,1));
+				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle(k,h+10+(h-indent-10)/2+koefH*exampleBuffer->buff[j-1][0],1,1));
+				g->DrawLine(Pens::Black, Point(k,h+10+(h-indent-10)/2-koefH*exampleBuffer->buff[j-1][0]), Point(k,h+10+(h-indent-10)/2+koefH*exampleBuffer->buff[j-1][0]));
+				k = k+koefW;
+			}
 			// draw coordinate line
 			for ( int counter = 1; counter <= NumberGraphics; counter++)
 			{
 				g->DrawLine(Pens::Black, Point(indent, h*counter-indent), Point(indent,h*(counter-1)+10));
-				g->DrawLine(Pens::Black, Point(indent, h*counter-indent-(h-indent-10)/2), Point(w-10,h*counter-indent-(h-indent-10)/2));
+				g->DrawLine(Pens::Black, Point(indent, h*counter-indent-(h-indent-10)/2), Point(koefW*buffer->getLength(),h*counter-indent-(h-indent-10)/2));
 
 			// draw direction of coordinate line
 				g->DrawLine(Pens::Black, Point(w-10-5, h*counter-indent-(h-indent-10)/2-2), Point(w-10,h*counter-(h-indent-10)/2-indent));
@@ -92,43 +102,29 @@ namespace sound_processor {
 			
 			//output width
 			char str ;
-			itoa(w, &str, 10);
+			itoa(time*1000, &str, 10);
 			String^ str2 = gcnew String(&str);
-			String^ drawString = "width " + str2;
+			String^ drawString = "time of playback:  " + str2;
 			
 			System::Drawing::Font^ drawFont = gcnew System::Drawing::Font( "Arial",10 );
 			SolidBrush^ drawBrush = gcnew SolidBrush( Color::Black );
 			Point drawPoint = Point(w-w/5,0);
-			e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   
-			
-			//output height
-			itoa(h, &str, 10);
-			str2 = gcnew String(&str);
-			drawString = "height " + str2;
-			
-			drawPoint = Point(w-w/5,15);
-			e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   
+			e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );  
 
+			drawString = "msec";
+			drawPoint = Point(w-w/15,0);
+			e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );  
+
+			
 			// signature of value
-			for(int i = 1; i < buffer->getLength(); i++)
-			{
-				System::Drawing::Font^ drawFont = gcnew System::Drawing::Font( "Arial",7 );
-				g->DrawLine(Pens::Black, Point(indent+i*koefW,h-(indent-2)-(h-indent-10)/2), Point(indent+i*koefW, h-(indent+2)-(h-indent-10)/2));
-				itoa(i, &str, 10);
-				str2 = gcnew String(&str);
-				drawString = str2;
-				drawPoint = Point(indent+i*koefW, h-indent-(h-indent-10)/2);
-				e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   
-
-				g->DrawLine(Pens::Black, Point(indent-2, h-buffer->buff[i][0]*koefH), Point(indent+2, h-buffer->buff[i][0]*koefH));
-				itoa(buffer->buff[i][0], &str, 10);
-				str2 = gcnew String(&str);
-				drawString = str2;
-				drawPoint = Point(indent-20, h-indent-(h-indent-10)/2-koefH*buffer->buff[i][0]);
-				e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );   
-			}
+			System::Drawing::Font^ drawFont1 = gcnew System::Drawing::Font( "Arial",7 );
+			g->DrawLine(Pens::Black, Point(indent-2, h-indent-(h-indent-10)/2-max*koefH+10), Point(indent+2, h-indent-(h-indent-10)/2-max*koefH+10));
+			itoa(max-10, &str, 10);
+			str2 = gcnew String(&str);
+			drawString = str2;
+			drawPoint = Point(indent-20, h-indent-(h-indent-10)/2-koefH*max);
+			e->Graphics->DrawString( drawString, drawFont1, drawBrush, drawPoint ); 
 		}
-
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
@@ -248,6 +244,8 @@ namespace sound_processor {
 
 		}
 #pragma endregion
+private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
+		 }
 };
 	public ref class SpFormEchoDialog : public System::Windows::Forms::Form
 	{

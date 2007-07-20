@@ -40,7 +40,90 @@ namespace sound_processor {
           	tabPage = gcnew array<System::Windows::Forms::TabPage^>(NumberTabs);
             InitializeComponent(NumberTabs,buffer->getLength());
         }
+		void pagePaint1(Object^ sender, PaintEventArgs^ e)
+		{
+			Graphics^ g = e->Graphics;  
+			int const indent = 30;
+			double k = indent;
+			double w = 0, h = 0;
+			System::Drawing::Rectangle rect = e->ClipRectangle;
+			w = (rect.Width);
+			h = (rect.Height)/NumberGraphics;
+			g->FillRectangle(Brushes::White, 0, 0, w, h);
+			
+			// to make a calculation coefficient of stretching and pressing
+	
+			double time = (buffer->getLength())/double(buffer->titleWave.freq);
+			double koefW = 1;
+			double koefH;
+			int max = buffer->buff[0][1];
+			for (int i = 1; i < buffer->getLength(); i++)
+			{
+				if (buffer->buff[i][1] > max)
+				{
+					max = buffer->buff[i][1];
+				}
+			}
+			if (max != 0)
+			{
+				koefH = double(h-indent-10)/(2*max);
+			}
 
+            // draw graphics
+			for (int j = 1; j < buffer->getLength(); j++)
+			{	
+				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle(k,h-indent-(h-indent-10)/2-koefH*buffer->buff[j-1][1],1,1));
+				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle(k,h-indent-(h-indent-10)/2+koefH*buffer->buff[j-1][1],1,1));
+				g->DrawLine(Pens::Black, Point(k,h-indent-(h-indent-10)/2-koefH*buffer->buff[j-1][1]), Point(k, h-indent-(h-indent-10)/2+koefH*buffer->buff[j-1][1]));
+				k = k+koefW;
+			}
+			// draw modified graphics
+			k = indent;
+			for (int j = 1; j < exampleBuffer->getLength(); j++)
+			{	
+				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle(k,h+10+(h-indent-10)/2-koefH*exampleBuffer->buff[j-1][1],1,1));
+				g->FillEllipse(Brushes::Black, System::Drawing::Rectangle(k,h+10+(h-indent-10)/2+koefH*exampleBuffer->buff[j-1][1],1,1));
+				g->DrawLine(Pens::Black, Point(k,h+10+(h-indent-10)/2-koefH*exampleBuffer->buff[j-1][1]), Point(k,h+10+(h-indent-10)/2+koefH*exampleBuffer->buff[j-1][1]));
+				k = k+koefW;
+			}
+			// draw coordinate line
+			for ( int counter = 1; counter <= NumberGraphics; counter++)
+			{
+				g->DrawLine(Pens::Black, Point(indent, h*counter-indent), Point(indent,h*(counter-1)+10));
+				g->DrawLine(Pens::Black, Point(indent, h*counter-indent-(h-indent-10)/2), Point(koefW*buffer->getLength(),h*counter-indent-(h-indent-10)/2));
+
+			// draw direction of coordinate line
+				g->DrawLine(Pens::Black, Point(w-10-5, h*counter-indent-(h-indent-10)/2-2), Point(w-10,h*counter-(h-indent-10)/2-indent));
+				g->DrawLine(Pens::Black, Point(w-10-5, h*counter-indent-(h-indent-10)/2+2), Point(w-10,h*counter-indent-(h-indent-10)/2));
+				g->DrawLine(Pens::Black, Point(indent-2,h*(counter-1)+10+5), Point(indent,h*(counter-1)+10));
+				g->DrawLine(Pens::Black, Point(indent+2,h*(counter-1)+10+5), Point(indent,h*(counter-1)+10));
+			}
+			
+			//output width
+			char str ;
+			itoa(time*1000, &str, 10);
+			String^ str2 = gcnew String(&str);
+			String^ drawString = "time of playback:  " + str2;
+			
+			System::Drawing::Font^ drawFont = gcnew System::Drawing::Font( "Arial",10 );
+			SolidBrush^ drawBrush = gcnew SolidBrush( Color::Black );
+			Point drawPoint = Point(w-w/5,0);
+			e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );  
+
+			drawString = "msec";
+			drawPoint = Point(w-w/15,0);
+			e->Graphics->DrawString( drawString, drawFont, drawBrush, drawPoint );  
+
+			
+			// signature of value
+			System::Drawing::Font^ drawFont1 = gcnew System::Drawing::Font( "Arial",7 );
+			g->DrawLine(Pens::Black, Point(indent-2, h-indent-(h-indent-10)/2-max*koefH+10), Point(indent+2, h-indent-(h-indent-10)/2-max*koefH+10));
+			itoa(max-10, &str, 10);
+			str2 = gcnew String(&str);
+			drawString = str2;
+			drawPoint = Point(indent-20, h-indent-(h-indent-10)/2-koefH*max);
+			e->Graphics->DrawString( drawString, drawFont1, drawBrush, drawPoint ); 
+		}
 		void pagePaint(Object^ sender, PaintEventArgs^ e)
 		{
 			Graphics^ g = e->Graphics;  
@@ -197,7 +280,7 @@ namespace sound_processor {
 
 
 			this->tabPage[0]->Paint += gcnew System::Windows::Forms::PaintEventHandler( this, &Form1::pagePaint);
-			
+			this->tabPage[1]->Paint += gcnew System::Windows::Forms::PaintEventHandler( this, &Form1::pagePaint1);
 			for(i = 0; i < NumberTabs; i++)
 			{
 				this->tabControl1->Controls->Add(this->tabPage[i]);

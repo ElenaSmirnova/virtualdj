@@ -40,6 +40,15 @@ public:
 		buff = buffer;
 		setLength(len_buff);
 		lastSimbol = 0;
+		titleWave.align = 0;
+		titleWave.bits = 0;
+		titleWave.bytes = 0;
+		titleWave.channels = 0;
+		titleWave.freq = 0;
+		titleWave.len_chuck = 0;
+		titleWave.len_data = 0;
+		titleWave.len_riff = 0;
+		titleWave.type = 0;
 	}
 	~SoundBuffer(){
 		for (int i=0; i<len_buff; i++){

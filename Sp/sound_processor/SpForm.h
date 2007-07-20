@@ -283,6 +283,7 @@ namespace sound_processor {
 			 System::Windows::Forms::TextBox^  TEXTBOXDELAY;
 	private: System::Windows::Forms::Button^  BUTTON_OK;
 			 Global *global;
+			 SoundBuffer *exBuffer;
 
 	
 	private:
@@ -535,8 +536,8 @@ namespace sound_processor {
 			this->LABELHELP->Name = L"LABELHELP";
 			this->LABELHELP->Size = System::Drawing::Size(300, 17);
 			if (global->exampleBuffer != NULL){
-				int max = 0, min = 0;
-				for (int i=0; i<global->exampleBuffer->getLength(); i++){
+				int max = global->exampleBuffer->buff[0][0], min = global->exampleBuffer->buff[0][0];
+				for (long i=0; i<global->exampleBuffer->getLength(); i++){
 					for (int j=0; j<2; j++){
 						if (max < global->exampleBuffer->buff[i][j]){
 							max = global->exampleBuffer->buff[i][j];
@@ -777,9 +778,8 @@ private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventAr
                     wch, sizeInBytes);
 
 				read2(global->buffer, NameOfTheOpenedFile);
-				global->exampleBuffer = new SoundBuffer(NULL, global->buffer->getLength());
+				global->exampleBuffer->setLength(global->buffer->getLength());
 				appropriate(global->exampleBuffer, global->buffer);
-				global->exampleMemoryBuffer = new SoundBuffer(NULL, global->buffer->getLength());
 				this->ECHODIALOG = (gcnew SpFormEchoDialog(this->global));
 				this->DISTORTIONDIALOG = (gcnew SpFormDistortionDialog(this->global));
 
@@ -793,8 +793,8 @@ private: System::Void BUTTON_OPEN_Click(System::Object^  sender, System::EventAr
 			 this->COMPOBOX_EFFECTS->Visible = TRUE;
 		 }
 private: System::Void BUTTON_CONVERT_Click(System::Object^  sender, System::EventArgs^  e) {
-			 appropriate(global->buffer, global->exampleBuffer);//вызов функции, отвечающей за конвертирование
 			 this->LABELSTATE->Text = L"Convert...";
+			 appropriate(global->buffer, global->exampleBuffer);//вызов функции, отвечающей за конвертирование
 			 String^ outputString = "";
 			 if (this->SAVEFILEDIALOG->ShowDialog() == Windows::Forms::DialogResult::OK){ //если нажади Сохранить
 				 String^ fileName = this->SAVEFILEDIALOG->FileName; //получение имени файла, куда сохранять
@@ -828,6 +828,8 @@ private: System::Void COMPOBOX_EFFECTS_SelectedIndexChanged(System::Object^  sen
 				System::Windows::Forms::DialogResult dlgResult = DISTORTIONDIALOG->DialogResult;
 				if (dlgResult == System::Windows::Forms::DialogResult::OK) {
 					this->LABELSTATE->Text = L"Distortion...";
+					this->ECHODIALOG = (gcnew SpFormEchoDialog(this->global));
+					this->DISTORTIONDIALOG = (gcnew SpFormDistortionDialog(this->global));
 				}
 			 }else{
 				 if (this->COMPOBOX_EFFECTS->SelectedItem->Equals("Echo")){
@@ -835,6 +837,8 @@ private: System::Void COMPOBOX_EFFECTS_SelectedIndexChanged(System::Object^  sen
 					System::Windows::Forms::DialogResult dlgResult = ECHODIALOG->DialogResult;
 					if (dlgResult == System::Windows::Forms::DialogResult::OK) {
 						this->LABELSTATE->Text = L"Echo...";
+						this->ECHODIALOG = (gcnew SpFormEchoDialog(this->global));
+						this->DISTORTIONDIALOG = (gcnew SpFormDistortionDialog(this->global));
 					}
 				 }
 			 }

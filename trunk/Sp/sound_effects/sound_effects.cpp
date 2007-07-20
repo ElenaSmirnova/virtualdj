@@ -43,7 +43,7 @@ bool distortion(int highLimit, int lowLimit, SoundBuffer *buffer){
 				}
 			}
 		}
-		return true;
+	return true;
 }
 
 extern "C" __declspec(dllexport) int mainDistortion(int highLimit, int lowLimit, SoundBuffer *buffer)
@@ -129,10 +129,10 @@ int sumBuffers(SoundBuffer *buffer){
 		for (int j=0; j<buffer->getLength(); j++){
 			for (int i=0; i<CANALS; i++){
 				if (j>=DELAY) {
-					buffer->buff[j][i] = buffer->buff[j][i] + firstEcho[j-DELAY][i];
+					buffer->buff[j][i] = floor(0.75*buffer->buff[j][i] + 0.75*firstEcho[j-DELAY][i]+0.5);
 				}
 				if (j>=2*DELAY) {
-					buffer->buff[j][i] = buffer->buff[j][i] + secondEcho[j-2*DELAY][i];
+					buffer->buff[j][i] = floor(0.75*buffer->buff[j][i] + 0.75*secondEcho[j-2*DELAY][i]+0.5);
 				}
 			}
 		}//создаем выходной буффер
